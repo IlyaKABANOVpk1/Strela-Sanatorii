@@ -24,39 +24,65 @@ namespace Strela_Sanatorii.Windows
         {
             InitializeComponent();
         }
+
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
-            string login = txtLogin.Text;
+            // Скрываем ошибку при новом нажатии
+            lblError.Visibility = Visibility.Collapsed;
+
+            string login = txtLogin.Text.Trim();
             string password = txtPassword.Password;
 
-            using (ApplicationContext db = new ApplicationContext())
+            // Проверка на пустые поля
+            if (string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(password))
             {
-                // Ищем пользователя и подгружаем его роль (Include)
-                var user = db.Users
-                    .Include(u => u.Role)
-                    .FirstOrDefault(u => u.Login == login && u.PasswordHash == password);
+                lblError.Text = "Введите логин и пароль";
+                lblError.Visibility = Visibility.Visible;
+                return;
+            }
 
-                if (user != null)
+            try
+            {
+                using (ApplicationContext db = new ApplicationContext())
                 {
-                    // Логика перехода в зависимости от роли
-                    if (user.Role.Name == "Администратор")
-                    {
-                        //AdminMainWindow adminWin = new AdminMainWindow();
-                        //adminWin.Show();
-                    }
-                    else if (user.Role.Name == "Сотрудник доп. услуг")
-                    {
-                        //ServicesMainWindow serviceWin = new ServicesMainWindow();
-                        //serviceWin.Show();
-                    }
+                    var user = db.Users
+                        .Include(u => u.Role)
+                        .FirstOrDefault(u => u.Login == login && u.PasswordHash == password);
 
-                    this.Close(); // Закрываем окно логина
+                    if (user != null)
+                    {
+                        // Переход по ролям
+                        if (user.Role.Name == "Администратор")
+                        {
+                            AdminMainWindow adminWindow = new AdminMainWindow();
+                            adminWindow.Show();
+                        }
+                        else if (user.Role.Name == "Сотрудник доп. услуг")
+                        {
+                            MessageBox.Show("Окно сотрудника услуг пока не реализовано");
+                            // ServicesMainWindow serviceWindow = new ServicesMainWindow();
+                            // serviceWindow.Show();
+                        }
+                        else if (user.Role.Name == "Системный администратор")
+                        {
+                            MessageBox.Show("Окно системного администратора пока не реализовано");
+                        }
+
+                        this.Close();
+                    }
+                    else
+                    {
+                        lblError.Text = "Неверный логин или пароль";
+                        lblError.Visibility = Visibility.Visible;
+                    }
                 }
-                else
-                {
-                    lblError.Text = "Неверный логин или пароль";
-                    lblError.Visibility = Visibility.Visible;
-                }
+            }
+            catch (Exception ex)
+            {
+                lblError.Text = "Ошибка подключения к базе данных";
+                lblError.Visibility = Visibility.Visible;
+
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

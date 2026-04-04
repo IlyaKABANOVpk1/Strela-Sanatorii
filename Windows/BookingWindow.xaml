@@ -1,0 +1,64 @@
+﻿<Window x:Class="Strela_Sanatorii.Windows.BookingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="Заселение"
+        Height="450" Width="400"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource MaterialDesignPaper}">
+
+    <Grid Margin="20">
+
+        <materialDesign:Card Padding="25"
+                             materialDesign:ElevationAssist.Elevation="Dp8">
+
+            <StackPanel>
+
+                <!-- Заголовок -->
+                <TextBlock Text="Заселение в номер"
+                           FontSize="20"
+                           FontWeight="Bold"
+                           Margin="0,0,0,20"/>
+
+                <!-- Номер -->
+                <TextBlock x:Name="txtRoom"
+                           FontSize="14"
+                           Margin="0,0,0,15"
+                           Opacity="0.7"/>
+
+                <!-- ФИО -->
+                <TextBox x:Name="txtFio"
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                         materialDesign:HintAssist.Hint="ФИО"
+                         Margin="0,0,0,15"/>
+
+                <!-- Телефон -->
+                <TextBox x:Name="txtPhone"
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                         materialDesign:HintAssist.Hint="Телефон"
+                         Margin="0,0,0,15"/>
+
+                <!-- Табельный номер -->
+                <TextBox x:Name="txtTabNumber"
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                         materialDesign:HintAssist.Hint="Табельный номер"
+                         Margin="0,0,0,25"/>
+
+                <!-- Кнопки -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+
+                    <Button Content="Отмена"
+                            Margin="0,0,10,0"
+                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Click="Cancel_Click"/>
+
+                    <Button Content="ЗАСЕЛИТЬ"
+                            Style="{StaticResource MaterialDesignRaisedButton}"
+                            Click="Save_Click"/>
+                </StackPanel>
+
+            </StackPanel>
+        </materialDesign:Card>
+    </Grid>
+</Window>
+
