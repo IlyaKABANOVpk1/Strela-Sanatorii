@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Strela_Sanatorii.Models;
 using MaterialDesignThemes.Wpf;
+using Strela_Sanatorii.Windows;
 
 
 
@@ -55,28 +56,39 @@ namespace Strela_Sanatorii.Pages
                               .ToList();
 
                 var bookings = db.Bookings
-                                 .Where(b => b.ShiftId == selectedShift.Id)
-                                 .Select(b => b.RoomId)
-                                 .ToList();
+                    .Where(b => b.ShiftId == selectedShift.Id)
+                    .Select(b => new
+                    {
+                        b.RoomId,
+                        ClientName = b.Client.FullName
+                    })
+                    .ToList();
 
                 RoomsGrid.Children.Clear();
 
                 foreach (var room in rooms)
                 {
+                    
+                    var booking = bookings.FirstOrDefault(b => b.RoomId == room.Id);
+
                     var card = new Card
                     {
                         Width = 140,
                         Height = 120,
                         Margin = new Thickness(10),
                         Padding = new Thickness(10),
-                        
-                        Background = bookings.Contains(room.Id) ? Brushes.LightCoral : Brushes.LightGreen,
+
+                        Background = booking != null
+                            ? new SolidColorBrush(Color.FromRgb(239, 83, 80))   // занят
+                            : new SolidColorBrush(Color.FromRgb(102, 187, 106)), // свободен
+
                         Cursor = System.Windows.Input.Cursors.Hand,
-                        ToolTip = bookings.Contains(room.Id) ? "Занят" : "Свободен"
+                        ToolTip = booking != null ? "Занят" : "Свободен"
                     };
 
                     var stack = new StackPanel();
 
+                    // Номер
                     stack.Children.Add(new TextBlock
                     {
                         Text = $"Номер {room.RoomNumber}",
@@ -85,6 +97,7 @@ namespace Strela_Sanatorii.Pages
                         HorizontalAlignment = HorizontalAlignment.Center
                     });
 
+                    // Категория
                     stack.Children.Add(new TextBlock
                     {
                         Text = room.Category,
@@ -93,21 +106,85 @@ namespace Strela_Sanatorii.Pages
                         Opacity = 0.7
                     });
 
+                    // ФИО или "Свободен"
+                    if (booking != null)
+                    {
+                        stack.Children.Add(new TextBlock
+                        {
+                            Text = booking.ClientName,
+                            FontSize = 13,
+                            TextWrapping = TextWrapping.Wrap,
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                            Margin = new Thickness(0, 5, 0, 0)
+                        });
+                    }
+                    else
+                    {
+                        stack.Children.Add(new TextBlock
+                        {
+                            Text = "Свободен",
+                            FontSize = 12,
+                            Opacity = 0.6,
+                            HorizontalAlignment = HorizontalAlignment.Center,
+                            Margin = new Thickness(0, 5, 0, 0)
+                        });
+                    }
+
                     card.Content = stack;
 
                     card.MouseLeftButtonUp += (s, ev) =>
                     {
-                        if (bookings.Contains(room.Id))
+                        if (booking != null)
                         {
-                            MessageBox.Show($"Номер {room.RoomNumber} уже занят на эту смену.");
+                            var dialog = new BookingActionsWindow(booking.ClientName, room.RoomNumber);
+
+                            if (dialog.ShowDialog() == true)
+                            {
+                                // ВЫСЕЛЕНИЕ
+                                if (dialog.ActionResult == "Evict")
+                                {
+                                    using (var db = new ApplicationContext())
+                                    {
+                                        var bookingToDelete = db.Bookings
+                                            .FirstOrDefault(b => b.RoomId == room.Id && b.ShiftId == selectedShift.Id);
+
+                                        if (bookingToDelete != null)
+                                        {
+                                            db.Bookings.Remove(bookingToDelete);
+                                            db.SaveChanges();
+                                        }
+                                    }
+
+                                    RefreshGrid(null, null);
+                                }
+
+                                // ПЕРЕСЕЛЕНИЕ
+                                else if (dialog.ActionResult == "Rebook")
+                                {
+                                    using (var db = new ApplicationContext())
+                                    {
+                                        var bookingToDelete = db.Bookings
+                                            .FirstOrDefault(b => b.RoomId == room.Id && b.ShiftId == selectedShift.Id);
+
+                                        if (bookingToDelete != null)
+                                        {
+                                            db.Bookings.Remove(bookingToDelete);
+                                            db.SaveChanges();
+                                        }
+                                    }
+
+                                    BookingWindow bookingWindow = new BookingWindow(room, selectedShift);
+                                    bookingWindow.ShowDialog();
+
+                                    RefreshGrid(null, null);
+                                }
+                            }
                         }
                         else
                         {
-                            // Открываем окно для брони
                             BookingWindow bookingWindow = new BookingWindow(room, selectedShift);
                             bookingWindow.ShowDialog();
 
-                            // После закрытия обновляем сетку
                             RefreshGrid(null, null);
                         }
                     };

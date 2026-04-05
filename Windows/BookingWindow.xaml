@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="Заселение"
-        Height="450" Width="400"
+        Height="500" Width="400"
         WindowStartupLocation="CenterScreen"
         Background="{DynamicResource MaterialDesignPaper}">
 
@@ -19,18 +19,28 @@
                            FontSize="20"
                            FontWeight="Bold"
                            Margin="0,0,0,20"/>
-
+                
+               
                 <!-- Номер -->
                 <TextBlock x:Name="txtRoom"
                            FontSize="14"
                            Margin="0,0,0,15"
+                           
                            Opacity="0.7"/>
 
-                <!-- ФИО -->
-                <TextBox x:Name="txtFio"
-                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                         materialDesign:HintAssist.Hint="ФИО"
-                         Margin="0,0,0,15"/>
+
+
+                <ComboBox x:Name="cmbClients"
+          Margin="0,0,0,20"
+          Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+          materialDesign:HintAssist.Hint="Выберите клиента"
+          IsEditable="True"
+          StaysOpenOnEdit="True"
+          TextSearch.TextPath="FullName"
+          Loaded="cmbClients_Loaded"
+          SelectionChanged="cmbClients_SelectionChanged"
+          DataContextChanged="cmbClients_TextChanged"                
+          />
 
                 <!-- Телефон -->
                 <TextBox x:Name="txtPhone"

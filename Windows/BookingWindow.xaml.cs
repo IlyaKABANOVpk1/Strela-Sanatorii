@@ -35,35 +35,31 @@ namespace Strela_Sanatorii.Windows
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            string fio = txtFio.Text.Trim();
-            string phone = txtPhone.Text.Trim();
-            string pers = txtTabNumber.Text.Trim();
-
-            if (string.IsNullOrEmpty(fio))
+            if (cmbClients.SelectedItem == null)
             {
-                MessageBox.Show("Введите ФИО");
+                MessageBox.Show("Выберите клиента!");
                 return;
             }
 
+            var selectedClient = cmbClients.SelectedItem as Client;
+
             using (var db = new ApplicationContext())
             {
-                // создаём клиента
-                var client = new Client
+
+                var existingBooking = db.Bookings
+                                        .FirstOrDefault(b => b.RoomId == _room.Id && b.ShiftId == _shift.Id);
+
+                if (existingBooking != null)
                 {
-                    FullName = fio,
-                    Phone = phone,
-                    PersonnelNumber = pers
-                };
-
-                db.Clients.Add(client);
-                db.SaveChanges();
-
-                // создаём бронь
+                    MessageBox.Show($"Номер {_room.RoomNumber} уже занят для выбранной смены.");
+                    return;
+                }
+                // Создаём новую бронь
                 var booking = new Booking
                 {
-                    ClientId = client.Id,
-                    RoomId = _room.Id,
-                    ShiftId = _shift.Id,
+                    ClientId = selectedClient.Id,
+                    RoomId = _room.Id,    // _room передаётся через конструктор окна
+                    ShiftId = _shift.Id,  // _shift передаётся через конструктор окна
                     CreatedAt = DateTime.Now
                 };
 
@@ -71,15 +67,51 @@ namespace Strela_Sanatorii.Windows
                 db.SaveChanges();
             }
 
-            MessageBox.Show("Гость успешно заселён");
-
-            this.DialogResult = true;
+            this.DialogResult = true; // чтобы окно вернуло результат
             this.Close();
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void cmbClients_Loaded(object sender, RoutedEventArgs e)
+        {
+            using (var db = new ApplicationContext())
+            {
+                var clients = db.Clients
+                                .OrderBy(c => c.FullName)
+                                .ToList();
+
+                cmbClients.ItemsSource = clients;
+                cmbClients.DisplayMemberPath = "FullName"; // что показываем
+                cmbClients.SelectedValuePath = "Id";       // что возвращаем
+            }
+        }
+
+        private void cmbClients_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cmbClients.SelectedItem is Client client)
+            {
+                txtPhone.Text = client.Phone;
+                txtTabNumber.Text = client.PersonnelNumber;
+            }
+        }
+
+        private void cmbClients_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string search = cmbClients.Text.ToLower();
+            using (var db = new ApplicationContext())
+            {
+                var clients = db.Clients
+                                .Where(c => c.FullName.ToLower().Contains(search))
+                                .OrderBy(c => c.FullName)
+                                .ToList();
+
+                cmbClients.ItemsSource = clients;
+                cmbClients.IsDropDownOpen = true; // чтобы список показывался при вводе
+            }
         }
     }
 }

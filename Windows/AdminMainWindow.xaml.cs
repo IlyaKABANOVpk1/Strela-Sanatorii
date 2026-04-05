@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Strela_Sanatorii.Pages;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,11 @@ namespace Strela_Sanatorii.Windows
         public AdminMainWindow()
         {
             InitializeComponent();
+        }
+
+        private void Nav_Clients(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new ClientsPage());
         }
     }
 }
