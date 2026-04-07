@@ -48,7 +48,8 @@ namespace Strela_Sanatorii
         
             modelBuilder.Entity<Role>().HasData(
                 new Role { Id = 1, Name = "Администратор" },
-                new Role { Id = 2, Name = "Сотрудник доп. услуг" }
+                new Role { Id = 2, Name = "Сотрудник доп. услуг" },
+                new Role { Id = 3, Name = "Системный администратор"}
             );
         }
     }

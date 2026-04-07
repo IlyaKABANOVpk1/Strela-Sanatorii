@@ -1,0 +1,45 @@
+﻿<Page x:Class="Strela_Sanatorii.Pages.ServiceJournalPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      Title="ServiceJournalPage"
+      Background="{DynamicResource MaterialDesignPaper}">
+
+    <StackPanel Margin="20">
+
+        <!-- Фильтры -->
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,15" HorizontalAlignment="Left" >
+            <ComboBox x:Name="cmbFilterClient" Width="200" DisplayMemberPath="FullName"
+                      Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                      materialDesign:HintAssist.Hint="Клиент"
+                      SelectionChanged="Filter_Changed"/>
+            <ComboBox x:Name="cmbFilterService" Width="200" DisplayMemberPath="Name"
+                      Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                      materialDesign:HintAssist.Hint="Услуга"
+                      SelectionChanged="Filter_Changed"/>
+            <DatePicker x:Name="dpFilterDate" Width="150" SelectedDateChanged="Filter_Changed"/>
+        </StackPanel>
+
+        <!-- Таблица -->
+        <DataGrid x:Name="JournalGrid"
+                  AutoGenerateColumns="False"
+                  SelectionMode="Single"
+                  Height="400"
+                  Margin="0,0,0,10">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Клиент" Binding="{Binding Client.FullName}" Width="*"/>
+                <DataGridTextColumn Header="Услуга" Binding="{Binding Service.Name}" Width="*"/>
+                <DataGridTextColumn Header="Дата" Binding="{Binding AppointmentDate, StringFormat=d}" Width="150"/>
+                <DataGridTextColumn Header="Время" Binding="{Binding StartTime}" Width="100"/>
+                <DataGridCheckBoxColumn Header="Оплачено" Binding="{Binding IsPaid}" Width="100"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Кнопка оплаты -->
+        <Button Content="Оплата выбранной записи"
+                Style="{StaticResource MaterialDesignRaisedButton}"
+                Width="200"
+                Click="Pay_Click"/>
+    </StackPanel>
+</Page>
