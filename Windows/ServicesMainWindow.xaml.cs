@@ -23,6 +23,8 @@ namespace Strela_Sanatorii.Windows
         public ServicesMainWindow()
         {
             InitializeComponent();
+
+            // При открытии сразу открываем страницу "Запись на услуги"
             MainFrame.Navigate(new ServiceRecordsPage());
         }
 
@@ -38,13 +40,21 @@ namespace Strela_Sanatorii.Windows
 
         private void Nav_Services(object sender, RoutedEventArgs e)
         {
-            //MainFrame.Navigate(new ServicesListPage());
+            MainFrame.Navigate(new ServicesListPage());
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
-            new LoginWindow().Show();
-            this.Close();
+            var result = MessageBox.Show("Выйти из системы?",
+                                       "Выход",
+                                       MessageBoxButton.YesNo,
+                                       MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                new LoginWindow().Show();
+                this.Close();
+            }
         }
     }
 }

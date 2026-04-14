@@ -27,13 +27,11 @@ namespace Strela_Sanatorii.Windows
 
         private void btnLogin_Click(object sender, RoutedEventArgs e)
         {
-            // Скрываем ошибку при новом нажатии
             lblError.Visibility = Visibility.Collapsed;
 
             string login = txtLogin.Text.Trim();
             string password = txtPassword.Password;
 
-            // Проверка на пустые поля
             if (string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(password))
             {
                 lblError.Text = "Введите логин и пароль";
@@ -51,7 +49,6 @@ namespace Strela_Sanatorii.Windows
 
                     if (user != null)
                     {
-                        // Переход по ролям
                         if (user.Role.Name == "Администратор")
                         {
                             AdminMainWindow adminWindow = new AdminMainWindow();
@@ -59,13 +56,17 @@ namespace Strela_Sanatorii.Windows
                         }
                         else if (user.Role.Name == "Сотрудник доп. услуг")
                         {
-                            MessageBox.Show("Окно сотрудника услуг пока не реализовано");
-                            // ServicesMainWindow serviceWindow = new ServicesMainWindow();
-                            // serviceWindow.Show();
+                            ServicesMainWindow serviceWindow = new ServicesMainWindow();
+                            serviceWindow.Show();
                         }
                         else if (user.Role.Name == "Системный администратор")
                         {
-                            MessageBox.Show("Окно системного администратора пока не реализовано");
+                            MessageBox.Show("Окно системного администратора пока не реализовано",
+                                            "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Неизвестная роль пользователя", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                         }
 
                         this.Close();
@@ -81,7 +82,6 @@ namespace Strela_Sanatorii.Windows
             {
                 lblError.Text = "Ошибка подключения к базе данных";
                 lblError.Visibility = Visibility.Visible;
-
                 MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }

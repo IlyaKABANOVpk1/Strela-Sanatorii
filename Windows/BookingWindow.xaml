@@ -30,17 +30,19 @@
 
 
 
+                <TextBox x:Name="txtClientSearch"
+         materialDesign:HintAssist.Hint="Поиск клиента (ФИО)"
+         Margin="0,0,0,10"
+         TextChanged="txtClientSearch_TextChanged"/>
+
                 <ComboBox x:Name="cmbClients"
-          Margin="0,0,0,20"
           Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-          materialDesign:HintAssist.Hint="Выберите клиента"
-          IsEditable="True"
-          StaysOpenOnEdit="True"
-          TextSearch.TextPath="FullName"
-          Loaded="cmbClients_Loaded"
+          materialDesign:HintAssist.Hint="Выбранный клиент"
+          DisplayMemberPath="FullName"
+          SelectedValuePath="Id"
           SelectionChanged="cmbClients_SelectionChanged"
-          DataContextChanged="cmbClients_TextChanged"                
-          />
+          IsEditable="False" />
+                <!-- лучше отключить IsEditable -->
 
                 <!-- Телефон -->
                 <TextBox x:Name="txtPhone"

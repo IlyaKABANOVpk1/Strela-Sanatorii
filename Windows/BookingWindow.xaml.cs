@@ -76,17 +76,23 @@ namespace Strela_Sanatorii.Windows
             this.Close();
         }
 
-        private void cmbClients_Loaded(object sender, RoutedEventArgs e)
+        private void txtClientSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
+            string search = txtClientSearch.Text?.Trim().ToLower() ?? "";
+
             using (var db = new ApplicationContext())
             {
-                var clients = db.Clients
-                                .OrderBy(c => c.FullName)
-                                .ToList();
+                var filtered = db.Clients
+                    .Where(c => string.IsNullOrEmpty(search) ||
+                                c.FullName.ToLower().Contains(search) ||
+                                (c.PersonnelNumber != null && c.PersonnelNumber.ToLower().Contains(search)))
+                    .OrderBy(c => c.FullName)
+                    .ToList();
 
-                cmbClients.ItemsSource = clients;
-                cmbClients.DisplayMemberPath = "FullName"; // что показываем
-                cmbClients.SelectedValuePath = "Id";       // что возвращаем
+                cmbClients.ItemsSource = filtered;
+
+                // Если ничего не найдено — можно оставить открытым или показать сообщение
+                cmbClients.IsDropDownOpen = filtered.Count > 0 && !string.IsNullOrEmpty(search);
             }
         }
 
@@ -94,23 +100,8 @@ namespace Strela_Sanatorii.Windows
         {
             if (cmbClients.SelectedItem is Client client)
             {
-                txtPhone.Text = client.Phone;
-                txtTabNumber.Text = client.PersonnelNumber;
-            }
-        }
-
-        private void cmbClients_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            string search = cmbClients.Text.ToLower();
-            using (var db = new ApplicationContext())
-            {
-                var clients = db.Clients
-                                .Where(c => c.FullName.ToLower().Contains(search))
-                                .OrderBy(c => c.FullName)
-                                .ToList();
-
-                cmbClients.ItemsSource = clients;
-                cmbClients.IsDropDownOpen = true; // чтобы список показывался при вводе
+                txtPhone.Text = client.Phone ?? "";
+                txtTabNumber.Text = client.PersonnelNumber ?? "";
             }
         }
     }
