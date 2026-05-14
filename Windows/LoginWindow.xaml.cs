@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Strela_Sanatorii.Models.UserTables;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,56 +35,61 @@ namespace Strela_Sanatorii.Windows
 
             if (string.IsNullOrWhiteSpace(login) || string.IsNullOrWhiteSpace(password))
             {
-                lblError.Text = "Введите логин и пароль";
-                lblError.Visibility = Visibility.Visible;
+                ShowError("Введите логин и пароль");
                 return;
             }
 
             try
             {
-                using (ApplicationContext db = new ApplicationContext())
+                var user = GetUserByCredentials(login, password);
+
+                if (user != null)
                 {
-                    var user = db.Users
-                        .Include(u => u.Role)
-                        .FirstOrDefault(u => u.Login == login && u.PasswordHash == password);
-
-                    if (user != null)
-                    {
-                        if (user.Role.Name == "Администратор")
-                        {
-                            AdminMainWindow adminWindow = new AdminMainWindow();
-                            adminWindow.Show();
-                        }
-                        else if (user.Role.Name == "Сотрудник доп. услуг")
-                        {
-                            ServicesMainWindow serviceWindow = new ServicesMainWindow();
-                            serviceWindow.Show();
-                        }
-                        else if (user.Role.Name == "Системный администратор")
-                        {
-                            MessageBox.Show("Окно системного администратора пока не реализовано",
-                                            "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
-                        }
-                        else
-                        {
-                            MessageBox.Show("Неизвестная роль пользователя", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                        }
-
-                        this.Close();
-                    }
-                    else
-                    {
-                        lblError.Text = "Неверный логин или пароль";
-                        lblError.Visibility = Visibility.Visible;
-                    }
+                    OpenMainWindowByRole(user);
+                    this.Close();
+                }
+                else
+                {
+                    ShowError("Неверный логин или пароль");
                 }
             }
             catch (Exception ex)
             {
-                lblError.Text = "Ошибка подключения к базе данных";
-                lblError.Visibility = Visibility.Visible;
+                ShowError("Ошибка подключения к базе данных");
                 MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private User GetUserByCredentials(string login, string password)
+        {
+            using (var db = new ApplicationContext())
+            {
+                return db.Users
+                         .Include(u => u.Role)
+                         .FirstOrDefault(u => u.Login == login && u.PasswordHash == password);
+            }
+        }
+
+        private void OpenMainWindowByRole(User user)
+        {
+            if (user.Role.Name == "Администратор")
+            {
+                new AdminMainWindow().Show();
+            }
+            else if (user.Role.Name == "Сотрудник доп. услуг")
+            {
+                new ServicesMainWindow().Show();
+            }
+            else if (user.Role.Name == "Системный администратор")
+            {
+                new SysAdminMainWindow().Show();
+            }
+        }
+
+        private void ShowError(string message)
+        {
+            lblError.Text = message;
+            lblError.Visibility = Visibility.Visible;
         }
     }
 }

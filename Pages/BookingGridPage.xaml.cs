@@ -1,4 +1,8 @@
-﻿using Strela_Sanatorii.Models.Accommodation_tables;
+﻿using MaterialDesignThemes.Wpf;
+using Microsoft.EntityFrameworkCore;
+using Strela_Sanatorii.Models;
+using Strela_Sanatorii.Models.Accommodation_tables;
+using Strela_Sanatorii.Windows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,9 +17,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Strela_Sanatorii.Models;
-using MaterialDesignThemes.Wpf;
-using Strela_Sanatorii.Windows;
 
 
 
@@ -57,6 +58,7 @@ namespace Strela_Sanatorii.Pages
 
                 var bookings = db.Bookings
                     .Where(b => b.ShiftId == selectedShift.Id)
+                    .Include(b => b.Client) //добавлено
                     .Select(b => new
                     {
                         b.RoomId,

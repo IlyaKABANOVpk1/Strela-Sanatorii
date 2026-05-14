@@ -6,9 +6,7 @@
 
     <DockPanel Margin="20">
 
-        <!-- Верхняя панель -->
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,15">
-
             <TextBox x:Name="txtSearch"
                      Width="250"
                      Margin="0,0,10,0"
@@ -18,10 +16,19 @@
 
             <Button Content="Добавить"
                     Style="{StaticResource MaterialDesignRaisedButton}"
-                    Click="AddClient_Click"/>
+                    Click="AddClient_Click"
+                    Margin="0,0,10,0"/>
+
+            <Button Content="Редактировать"
+                    Style="{StaticResource MaterialDesignRaisedButton}"
+                    Click="EditClient_Click"
+                    Margin="0,0,10,0"/>
+
+            <Button Content="Удалить"
+                    Style="{StaticResource MaterialDesignRaisedButton}"
+                    Click="DeleteClient_Click"/>
         </StackPanel>
 
-        <!-- Таблица -->
         <DataGrid x:Name="ClientsGrid"
                   AutoGenerateColumns="False"
                   IsReadOnly="True"

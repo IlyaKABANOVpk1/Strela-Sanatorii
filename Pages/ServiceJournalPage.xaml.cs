@@ -71,8 +71,15 @@ namespace Strela_Sanatorii.Pages
 
         private void Pay_Click(object sender, RoutedEventArgs e)
         {
+           
+            
             if (JournalGrid.SelectedItem is ServiceAppointment appointment)
             {
+                if (appointment.IsPaid)
+                {
+                    MessageBox.Show("Эта запись уже оплачена.");
+                    return;
+                }
                 using (var db = new ApplicationContext())
                 {
                     var record = db.ServiceAppointments.Find(appointment.Id);

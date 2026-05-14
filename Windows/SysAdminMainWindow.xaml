@@ -1,0 +1,108 @@
+﻿<Window x:Class="Strela_Sanatorii.Windows.SysAdminMainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="АИС «Стрела» — Системный администратор"
+        Height="720" Width="1200"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource MaterialDesignPaper}">
+
+    <Window.Resources>
+        <Style x:Key="SidebarButtonStyle"
+               TargetType="Button"
+               BasedOn="{StaticResource MaterialDesignFlatButton}">
+            <Setter Property="Height" Value="48"/>
+            <Setter Property="Margin" Value="8,4"/>
+            <Setter Property="Padding" Value="16"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="8">
+                            <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="Left"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#E3F2FD"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#BBDEFB"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="260"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <materialDesign:ColorZone Grid.ColumnSpan="2"
+                                  Mode="PrimaryMid"
+                                  Padding="16"
+                                  materialDesign:ElevationAssist.Elevation="Dp4">
+            <DockPanel>
+                <TextBlock Text="АИС «СТРЕЛА» — СИСТЕМНЫЙ АДМИНИСТРАТОР"
+                           FontSize="18" FontWeight="Bold"
+                           VerticalAlignment="Center"/>
+                <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                    <materialDesign:PackIcon Kind="AccountCircle" Width="26" Height="26" Margin="0,0,8,0"/>
+                    <TextBlock Text="Администратор системы" VerticalAlignment="Center" FontSize="14"/>
+                </StackPanel>
+            </DockPanel>
+        </materialDesign:ColorZone>
+
+        <Border Grid.Row="1"
+                Background="#FAFAFA"
+                BorderBrush="#E0E0E0"
+                BorderThickness="0,0,1,0">
+            <StackPanel Margin="0,10">
+                <StackPanel Margin="0,10,0,20">
+                    <materialDesign:PackIcon Kind="Server" Width="40" Height="40"
+                                             HorizontalAlignment="Center"
+                                             Foreground="{DynamicResource PrimaryHueMidBrush}"/>
+                    <TextBlock Text="Управление" HorizontalAlignment="Center" FontSize="13" Opacity="0.6"/>
+                </StackPanel>
+
+                <Button Style="{StaticResource SidebarButtonStyle}" Click="Nav_Users">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="AccountMultipleOutline" Margin="0,0,12,0"/>
+                        <TextBlock Text="Пользователи"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Style="{StaticResource SidebarButtonStyle}" Click="Nav_Rooms">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="HomeOutline" Margin="0,0,12,0"/>
+                        <TextBlock Text="Номера"/>
+                    </StackPanel>
+                </Button>
+
+                <Separator Margin="10,20"/>
+
+                <Button Style="{StaticResource SidebarButtonStyle}" Click="Exit_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="Logout" Margin="0,0,12,0"/>
+                        <TextBlock Text="Выход"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Border>
+
+        <Grid Grid.Row="1" Grid.Column="1" Background="#F5F5F5">
+            <Frame x:Name="MainFrame" Margin="20" NavigationUIVisibility="Hidden"/>
+        </Grid>
+    </Grid>
+</Window>

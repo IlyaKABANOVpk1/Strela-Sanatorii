@@ -7,48 +7,39 @@
         WindowStartupLocation="CenterScreen"
         Background="{DynamicResource MaterialDesignPaper}">
 
-
     <Window.Resources>
 
-        <!-- Hover стиль для кнопок меню -->
         <Style x:Key="SidebarButtonStyle"
-           TargetType="Button"
-           BasedOn="{StaticResource MaterialDesignFlatButton}">
+               TargetType="Button"
+               BasedOn="{StaticResource MaterialDesignFlatButton}">
 
             <Setter Property="Height" Value="48"/>
             <Setter Property="Margin" Value="8,4"/>
-            <Setter Property="Padding" Value="16"/>
-            <Setter Property="HorizontalContentAlignment" Value="Left"/>
-
+            <Setter Property="Padding" Value="16,0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#212121"/>
 
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border x:Name="border"
-                            Background="{TemplateBinding Background}"
-                            CornerRadius="8">
-                            <ContentPresenter VerticalAlignment="Center"
-                                          HorizontalAlignment="Left"
-                                          Margin="0,0,0,0"/>
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="8"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentControl Content="{TemplateBinding Content}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"/>
                         </Border>
 
                         <ControlTemplate.Triggers>
-
-                            <!-- HOVER -->
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border"
-                                    Property="Background"
-                                    Value="#E3F2FD"/>
+                                <Setter TargetName="border" Property="Background" Value="#E3F2FD"/>
                             </Trigger>
-
-                            <!-- НАЖАТИЕ -->
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="border"
-                                    Property="Background"
-                                    Value="#BBDEFB"/>
+                                <Setter TargetName="border" Property="Background" Value="#BBDEFB"/>
                             </Trigger>
-
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -57,6 +48,7 @@
         </Style>
 
     </Window.Resources>
+
     <Grid>
 
         <Grid.ColumnDefinitions>
@@ -77,13 +69,11 @@
 
             <DockPanel LastChildFill="True">
 
-                <!-- ЛЕВО -->
                 <TextBlock Text="АИС «СТРЕЛА»"
                            FontSize="18"
                            FontWeight="Bold"
                            VerticalAlignment="Center"/>
 
-                <!-- ПРАВО -->
                 <StackPanel Orientation="Horizontal"
                             DockPanel.Dock="Right">
 
@@ -126,54 +116,72 @@
 
                 <!-- КНОПКИ -->
                 <Button Style="{StaticResource SidebarButtonStyle}"
-                        Click="Nav_Dashboard"
-                        HorizontalContentAlignment="Left"
-                        Padding="16"
-                        Margin="8,4"
-                        Height="48">
+                        Click="Nav_Dashboard">
 
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="ViewDashboardOutline" Margin="0,0,12,0"/>
-                        <TextBlock Text="Шахматка"/>
+                        <materialDesign:PackIcon Kind="ViewDashboardOutline" 
+                                                 Width="24" 
+                                                 Height="24"
+                                                 Margin="0,0,12,0"/>
+                        <TextBlock Text="Шахматка"
+                                   VerticalAlignment="Center"
+                                   FontSize="14"/>
                     </StackPanel>
                 </Button>
 
                 <Button Style="{StaticResource SidebarButtonStyle}"
-                        Click="Nav_Clients"
-                        HorizontalContentAlignment="Left"
-                        Padding="16"
-                        Margin="8,4"
-                        Height="48">
+                        Click="Nav_Clients">
 
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="AccountMultipleOutline" Margin="0,0,12,0"/>
-                        <TextBlock Text="Постояльцы"/>
+                        <materialDesign:PackIcon Kind="AccountMultipleOutline" 
+                                                 Width="24" 
+                                                 Height="24"
+                                                 Margin="0,0,12,0"/>
+                        <TextBlock Text="Постояльцы"
+                                   VerticalAlignment="Center"
+                                   FontSize="14"/>
                     </StackPanel>
                 </Button>
 
                 <Button Style="{StaticResource SidebarButtonStyle}"
-                        Click="Nav_Shifts"
-                        HorizontalContentAlignment="Left"
-                        Padding="16"
-                        Margin="8,4"
-                        Height="48">
+                        Click="Nav_Rooms">
 
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="CalendarRange" Margin="0,0,12,0"/>
-                        <TextBlock Text="Смены"/>
+                        <materialDesign:PackIcon Kind="HomeOutline" 
+                                                 Width="24" 
+                                                 Height="24"
+                                                 Margin="0,0,12,0"/>
+                        <TextBlock Text="Номера"
+                                   VerticalAlignment="Center"
+                                   FontSize="14"/>
                     </StackPanel>
                 </Button>
 
                 <Button Style="{StaticResource SidebarButtonStyle}"
-                        Click="Nav_Reports"
-                        HorizontalContentAlignment="Left"
-                        Padding="16"
-                        Margin="8,4"
-                        Height="48">
+                        Click="Nav_Shifts">
 
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="ChartBar" Margin="0,0,12,0"/>
-                        <TextBlock Text="Отчёты"/>
+                        <materialDesign:PackIcon Kind="CalendarRange" 
+                                                 Width="24" 
+                                                 Height="24"
+                                                 Margin="0,0,12,0"/>
+                        <TextBlock Text="Смены"
+                                   VerticalAlignment="Center"
+                                   FontSize="14"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Style="{StaticResource SidebarButtonStyle}"
+                        Click="Nav_Reports">
+
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon Kind="ChartBar" 
+                                                 Width="24" 
+                                                 Height="24"
+                                                 Margin="0,0,12,0"/>
+                        <TextBlock Text="Отчёты"
+                                   VerticalAlignment="Center"
+                                   FontSize="14"/>
                     </StackPanel>
                 </Button>
 
@@ -181,15 +189,16 @@
 
                 <!-- ВЫХОД -->
                 <Button Style="{StaticResource SidebarButtonStyle}"
-                        Click="Exit_Click"
-                        HorizontalContentAlignment="Left"
-                        Padding="16"
-                        Margin="8,4"
-                        Height="48">
+                        Click="Exit_Click">
 
                     <StackPanel Orientation="Horizontal">
-                        <materialDesign:PackIcon Kind="Logout" Margin="0,0,12,0"/>
-                        <TextBlock Text="Выход"/>
+                        <materialDesign:PackIcon Kind="Logout" 
+                                                 Width="24" 
+                                                 Height="24"
+                                                 Margin="0,0,12,0"/>
+                        <TextBlock Text="Выход"
+                                   VerticalAlignment="Center"
+                                   FontSize="14"/>
                     </StackPanel>
                 </Button>
 

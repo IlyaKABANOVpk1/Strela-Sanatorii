@@ -27,6 +27,13 @@ namespace Strela_Sanatorii.Windows
         {
             InitializeComponent();
 
+            if (room == null || shift == null)
+            {
+                MessageBox.Show("Ошибка: номер или смена не переданы в окно заселения.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                this.Close();
+                return;
+            }
+
             _room = room;
             _shift = shift;
 
@@ -45,29 +52,28 @@ namespace Strela_Sanatorii.Windows
 
             using (var db = new ApplicationContext())
             {
-
                 var existingBooking = db.Bookings
-                                        .FirstOrDefault(b => b.RoomId == _room.Id && b.ShiftId == _shift.Id);
+                    .FirstOrDefault(b => b.RoomId == _room.Id && b.ShiftId == _shift.Id);
 
                 if (existingBooking != null)
                 {
                     MessageBox.Show($"Номер {_room.RoomNumber} уже занят для выбранной смены.");
                     return;
                 }
-                // Создаём новую бронь
+
                 var booking = new Booking
                 {
                     ClientId = selectedClient.Id,
-                    RoomId = _room.Id,    // _room передаётся через конструктор окна
-                    ShiftId = _shift.Id,  // _shift передаётся через конструктор окна
-                    CreatedAt = DateTime.Now
+                    RoomId = _room.Id,
+                    ShiftId = _shift.Id,
+                    CreatedAt = DateTime.UtcNow
                 };
 
                 db.Bookings.Add(booking);
                 db.SaveChanges();
             }
 
-            this.DialogResult = true; // чтобы окно вернуло результат
+            this.DialogResult = true;
             this.Close();
         }
 
@@ -90,8 +96,6 @@ namespace Strela_Sanatorii.Windows
                     .ToList();
 
                 cmbClients.ItemsSource = filtered;
-
-                // Если ничего не найдено — можно оставить открытым или показать сообщение
                 cmbClients.IsDropDownOpen = filtered.Count > 0 && !string.IsNullOrEmpty(search);
             }
         }

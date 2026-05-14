@@ -1,0 +1,44 @@
+﻿<Window x:Class="Strela_Sanatorii.Windows.RoomEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="Номер"
+        Height="350" Width="350"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource MaterialDesignPaper}">
+
+    <Grid Margin="20">
+        <materialDesign:Card Padding="25" materialDesign:ElevationAssist.Elevation="Dp8">
+            <StackPanel>
+                <TextBlock Text="Данные номера"
+                           FontSize="18" FontWeight="Bold"
+                           Margin="0,0,0,20"/>
+
+                <TextBox x:Name="txtRoomNumber"
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                         materialDesign:HintAssist.Hint="Номер комнаты"
+                         Margin="0,0,0,15"/>
+
+                <TextBox x:Name="txtCategory"
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                         materialDesign:HintAssist.Hint="Категория (например, Люкс)"
+                         Margin="0,0,0,15"/>
+
+                <TextBox x:Name="txtCapacity"
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                         materialDesign:HintAssist.Hint="Вместимость (чел.)"
+                         Margin="0,0,0,25"/>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="Отмена"
+                            Margin="0,0,10,0"
+                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Click="Cancel_Click"/>
+                    <Button Content="Сохранить"
+                            Style="{StaticResource MaterialDesignRaisedButton}"
+                            Click="Save_Click"/>
+                </StackPanel>
+            </StackPanel>
+        </materialDesign:Card>
+    </Grid>
+</Window>

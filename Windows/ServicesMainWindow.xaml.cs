@@ -28,6 +28,8 @@ namespace Strela_Sanatorii.Windows
             MainFrame.Navigate(new ServiceRecordsPage());
         }
 
+
+
         private void Nav_Records(object sender, RoutedEventArgs e)
         {
             MainFrame.Navigate(new ServiceRecordsPage());

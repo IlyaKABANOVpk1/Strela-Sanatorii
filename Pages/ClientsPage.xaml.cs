@@ -1,4 +1,5 @@
-﻿using Strela_Sanatorii.Windows;
+﻿using Strela_Sanatorii.Models.Accommodation_tables;
+using Strela_Sanatorii.Windows;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,10 +54,66 @@ namespace Strela_Sanatorii.Pages
 
         private void AddClient_Click(object sender, RoutedEventArgs e)
         {
-            var window = new BookingWindow(null, null); // используем как форму ввода
-            window.ShowDialog();
+            var window = new ClientEditWindow();
+            if (window.ShowDialog() == true)
+            {
+                LoadClients();
+            }
+        }
 
-            LoadClients();
+        private void EditClient_Click(object sender, RoutedEventArgs e)
+        {
+            if (ClientsGrid.SelectedItem is Client client)
+            {
+                var window = new ClientEditWindow(client);
+                if (window.ShowDialog() == true)
+                {
+                    LoadClients();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Выберите клиента для редактирования.");
+            }
+        }
+
+        private void DeleteClient_Click(object sender, RoutedEventArgs e)
+        {
+            if (ClientsGrid.SelectedItem is Client client)
+            {
+                var result = MessageBox.Show($"Удалить клиента {client.FullName}?",
+                    "Подтверждение",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    using (var db = new ApplicationContext())
+                    {
+                        var c = db.Clients.Find(client.Id);
+                        if (c != null)
+                        {
+                            // Проверка на связанные записи
+                            bool hasBookings = db.Bookings.Any(b => b.ClientId == c.Id);
+                            bool hasAppointments = db.ServiceAppointments.Any(a => a.ClientId == c.Id);
+
+                            if (hasBookings || hasAppointments)
+                            {
+                                MessageBox.Show("Невозможно удалить клиента, так как есть связанные брони или записи на услуги.");
+                                return;
+                            }
+
+                            db.Clients.Remove(c);
+                            db.SaveChanges();
+                        }
+                    }
+                    LoadClients();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Выберите клиента для удаления.");
+            }
         }
     }
 }
