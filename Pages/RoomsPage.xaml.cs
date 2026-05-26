@@ -1,4 +1,5 @@
-﻿using Strela_Sanatorii.Models.Accommodation_tables;
+﻿using Microsoft.EntityFrameworkCore;
+using Strela_Sanatorii.Models.Accommodation_tables;
 using Strela_Sanatorii.Windows;
 using System;
 using System.Collections.Generic;
@@ -32,7 +33,10 @@ namespace Strela_Sanatorii.Pages
         {
             using (var db = new ApplicationContext())
             {
-                RoomsGrid.ItemsSource = db.Rooms.OrderBy(r => r.RoomNumber).ToList();
+                RoomsGrid.ItemsSource = db.Rooms
+                    .Include(r => r.RoomCategory)
+                    .OrderBy(r => r.RoomNumber)
+                    .ToList();
             }
         }
 

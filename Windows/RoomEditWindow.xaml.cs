@@ -1,4 +1,5 @@
 ﻿using Strela_Sanatorii.Models.Accommodation_tables;
+using Strela_Sanatorii.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,11 +28,21 @@ namespace Strela_Sanatorii.Windows
             InitializeComponent();
             _room = room;
 
+            LoadCategories();
+
             if (_room != null)
             {
                 txtRoomNumber.Text = _room.RoomNumber;
-                txtCategory.Text = _room.Category;
+                cmbCategory.SelectedValue = _room.RoomCategoryId;
                 txtCapacity.Text = _room.Capacity.ToString();
+            }
+        }
+
+        private void LoadCategories()
+        {
+            using (var db = new ApplicationContext())
+            {
+                cmbCategory.ItemsSource = db.RoomCategories.OrderBy(c => c.Name).ToList();
             }
         }
 
@@ -43,7 +54,13 @@ namespace Strela_Sanatorii.Windows
                 return;
             }
 
-            if (!int.TryParse(txtCapacity.Text, out int capacity) || capacity <= 0)
+            if (cmbCategory.SelectedItem == null)
+            {
+                MessageBox.Show("Выберите категорию.");
+                return;
+            }
+
+            if (!ValidationHelper.IsPositiveInt(txtCapacity.Text, out int capacity))
             {
                 MessageBox.Show("Вместимость должна быть положительным числом.");
                 return;
@@ -56,7 +73,7 @@ namespace Strela_Sanatorii.Windows
                     db.Rooms.Add(new Room
                     {
                         RoomNumber = txtRoomNumber.Text.Trim(),
-                        Category = string.IsNullOrWhiteSpace(txtCategory.Text) ? null : txtCategory.Text.Trim(),
+                        RoomCategoryId = (int)cmbCategory.SelectedValue,
                         Capacity = capacity
                     });
                 }
@@ -66,7 +83,7 @@ namespace Strela_Sanatorii.Windows
                     if (existing != null)
                     {
                         existing.RoomNumber = txtRoomNumber.Text.Trim();
-                        existing.Category = string.IsNullOrWhiteSpace(txtCategory.Text) ? null : txtCategory.Text.Trim();
+                        existing.RoomCategoryId = (int)cmbCategory.SelectedValue;
                         existing.Capacity = capacity;
                     }
                 }
@@ -75,7 +92,7 @@ namespace Strela_Sanatorii.Windows
                 {
                     db.SaveChanges();
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
                     MessageBox.Show("Ошибка сохранения: " + ex.Message);
                     return;

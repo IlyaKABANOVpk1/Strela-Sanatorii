@@ -10,9 +10,12 @@ namespace Strela_Sanatorii.Models.Accommodation_tables
     {
         public int Id { get; set; }
         public string RoomNumber { get; set; }
-        public string Category { get; set; } // Одноместный, Люкс и т.д.
-        public int Capacity { get; set; }
+
+        public int RoomCategoryId { get; set; }           // ВМЕСТО строки Category
+        public virtual RoomCategory RoomCategory { get; set; }
+
+        public int Capacity { get; set; }                  // Вместимость (1, 2, 4 и т.д.)
 
         public virtual ICollection<Booking> Bookings { get; set; }
-    }
+}
 }

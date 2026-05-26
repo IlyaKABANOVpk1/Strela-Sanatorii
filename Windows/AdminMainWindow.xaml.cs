@@ -38,7 +38,7 @@ namespace Strela_Sanatorii.Windows
 
         private void Nav_Clients(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(new ClientsPage());
+            MainFrame.Navigate(new GuestsPage());  // БЫЛО: ClientsPage
         }
 
         private void Nav_Rooms(object sender, RoutedEventArgs e)
@@ -56,6 +56,15 @@ namespace Strela_Sanatorii.Windows
             MainFrame.Navigate(new ReportsPage());
         }
 
+        private void Nav_Prescriptions(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new PrescriptionsPage());
+        }
+
+        private void Nav_NurseSchedule(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new NurseSchedulePage());
+        }
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
             if (MessageBox.Show("Вы действительно хотите выйти из системы?",

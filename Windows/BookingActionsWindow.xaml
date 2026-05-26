@@ -3,41 +3,52 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="Управление бронью"
-        Height="300" Width="350"
+        Height="420" Width="350"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Background="{DynamicResource MaterialDesignPaper}">
 
     <Grid Margin="20">
-
         <materialDesign:Card Padding="20"
                              materialDesign:ElevationAssist.Elevation="Dp8">
 
             <StackPanel>
 
-                <!-- Заголовок -->
                 <TextBlock Text="Управление бронью"
                            FontSize="18"
                            FontWeight="Bold"
                            Margin="0,0,0,15"/>
 
-                <!-- Инфо -->
                 <TextBlock x:Name="txtInfo"
                            TextWrapping="Wrap"
                            Margin="0,0,0,20"/>
 
-                <!-- Кнопки -->
                 <StackPanel>
-
-                    <Button Content="Выселить"
+                    <Button Content="Прогресс пребывания"
                             Margin="0,0,0,10"
-                            Style="{StaticResource MaterialDesignRaisedButton}"
-                            Click="Evict_Click"/>
+                            Style="{StaticResource MaterialDesignOutlinedButton}"
+                            Click="Progress_Click"/>
+
+                    <Button Content="Дополнить пакет"
+                            Margin="0,0,0,10"
+                            Style="{StaticResource MaterialDesignOutlinedButton}"
+                            Click="Addon_Click"/>
 
                     <Button Content="Переселить"
                             Margin="0,0,0,10"
                             Style="{StaticResource MaterialDesignOutlinedButton}"
                             Click="Rebook_Click"/>
+
+                    <Button Content="Выселить"
+                            Margin="0,0,0,10"
+                            Style="{StaticResource MaterialDesignRaisedButton}"
+                            Background="#D32F2F"
+                            Click="Evict_Click"/>
+                    
+                    <Button Content="Справка о выселении"
+        Margin="0,0,0,10"
+        Style="{StaticResource MaterialDesignOutlinedButton}"
+        Click="Certificate_Click"/>
 
                     <Button Content="Отмена"
                             Style="{StaticResource MaterialDesignFlatButton}"

@@ -8,16 +8,26 @@
     <StackPanel Margin="20">
 
         <!-- Фильтры -->
-        <StackPanel Orientation="Horizontal" Margin="0,0,0,15" HorizontalAlignment="Left" >
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,15" HorizontalAlignment="Left">
             <ComboBox x:Name="cmbFilterClient" Width="200" DisplayMemberPath="FullName"
-                      Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                      materialDesign:HintAssist.Hint="Клиент"
-                      SelectionChanged="Filter_Changed"/>
+              Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+              materialDesign:HintAssist.Hint="Гость"
+              SelectionChanged="Filter_Changed"
+              Margin="0,0,10,0"/>
             <ComboBox x:Name="cmbFilterService" Width="200" DisplayMemberPath="Name"
-                      Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                      materialDesign:HintAssist.Hint="Услуга"
-                      SelectionChanged="Filter_Changed"/>
-            <DatePicker x:Name="dpFilterDate" Width="150" SelectedDateChanged="Filter_Changed"/>
+              Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+              materialDesign:HintAssist.Hint="Услуга"
+              SelectionChanged="Filter_Changed"
+              Margin="0,0,10,0"/>
+            <DatePicker x:Name="dpFilterDate" Width="150"
+                materialDesign:HintAssist.Hint="Дата"
+                SelectedDateChanged="Filter_Changed"
+                Margin="0,0,10,0"/>
+            <CheckBox x:Name="chkOnlyPaid"
+              Content="Только оплаченные"
+              VerticalAlignment="Center"
+              Checked="Filter_Changed"
+              Unchecked="Filter_Changed"/>
         </StackPanel>
 
         <!-- Таблица -->

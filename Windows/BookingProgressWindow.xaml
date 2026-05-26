@@ -1,0 +1,56 @@
+﻿<Window x:Class="Strela_Sanatorii.Windows.BookingProgressWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="Прогресс пребывания"
+        Height="400" Width="500"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource MaterialDesignPaper}">
+
+    <Grid Margin="20">
+        <StackPanel>
+            <TextBlock x:Name="txtGuestName"
+                       FontSize="18" FontWeight="Bold"
+                       Margin="0,0,0,10"/>
+
+            <TextBlock x:Name="txtRoomInfo"
+                       Margin="0,0,0,5"
+                       Opacity="0.7"/>
+
+            <TextBlock x:Name="txtShiftInfo"
+                       Margin="0,0,0,20"
+                       Opacity="0.7"/>
+
+            <TextBlock Text="Прогресс выполнения услуг:"
+                       FontWeight="Bold"
+                       Margin="0,0,0,10"/>
+
+            <ProgressBar x:Name="progressServices"
+                         Height="20"
+                         Maximum="100"
+                         Value="0"
+                         Margin="0,0,0,5"/>
+
+            <TextBlock x:Name="txtProgressPercent"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,20"/>
+
+            <TextBlock Text="Выполнено услуг:"
+                       FontWeight="Bold"
+                       Margin="0,0,0,5"/>
+            <TextBlock x:Name="txtCompletedCount"
+                       Margin="0,0,0,5"/>
+
+            <TextBlock Text="Осталось услуг:"
+                       FontWeight="Bold"
+                       Margin="0,0,0,5"/>
+            <TextBlock x:Name="txtRemainingCount"/>
+
+            <Button Content="Закрыть"
+                    Style="{StaticResource MaterialDesignRaisedButton}"
+                    Click="Close_Click"
+                    HorizontalAlignment="Right"
+                    Margin="0,20,0,0"/>
+        </StackPanel>
+    </Grid>
+</Window>

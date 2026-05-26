@@ -16,24 +16,30 @@ using System.Windows.Shapes;
 namespace Strela_Sanatorii.Windows
 {
     /// <summary>
-    /// Логика взаимодействия для SysAdminMainWindow.xaml
+    /// Логика взаимодействия для DoctorMainWindow.xaml
     /// </summary>
-    public partial class SysAdminMainWindow : Window
+    public partial class DoctorMainWindow : Window
     {
-        public SysAdminMainWindow()
+        public DoctorMainWindow()
         {
             InitializeComponent();
-            MainFrame.Navigate(new UsersPage());
+            // По умолчанию открываем страницу гостей
+            MainFrame.Navigate(new DoctorGuestsPage());
         }
 
-        private void Nav_Users(object sender, RoutedEventArgs e)
+        private void Nav_Guests(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(new UsersPage());
+            MainFrame.Navigate(new DoctorGuestsPage());
         }
 
-        private void Nav_Rooms(object sender, RoutedEventArgs e)
+        private void Nav_Prescriptions(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate(new RoomsPage());
+            MainFrame.Navigate(new PrescriptionsPage());
+        }
+
+        private void Nav_Schedule(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new GuestServiceSchedulePage());
         }
 
         private void Exit_Click(object sender, RoutedEventArgs e)

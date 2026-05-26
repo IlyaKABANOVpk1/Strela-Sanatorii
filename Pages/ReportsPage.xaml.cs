@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +26,17 @@ namespace Strela_Sanatorii.Pages
         {
             InitializeComponent();
             LoadAll();
+            LoadShifts();
+        }
+
+        private void LoadShifts()
+        {
+            using (var db = new ApplicationContext())
+            {
+                cmbReportShift.ItemsSource = db.Shifts
+                    .OrderBy(s => s.StartDate)
+                    .ToList();
+            }
         }
 
         private void LoadAll()
@@ -38,23 +50,36 @@ namespace Strela_Sanatorii.Pages
         {
             using (var db = new ApplicationContext())
             {
-                int totalRooms = db.Rooms.Count();
+                int totalCapacity = db.Rooms.Sum(r => r.Capacity);
 
                 var data = db.Shifts
                     .OrderBy(s => s.StartDate)
                     .Select(s => new
                     {
                         ShiftName = s.Name,
-                        Total = totalRooms,
-                        Booked = db.Bookings.Count(b => b.ShiftId == s.Id),
-                        Free = totalRooms - db.Bookings.Count(b => b.ShiftId == s.Id),
-                        Percent = totalRooms > 0
-                            ? (int)(((double)db.Bookings.Count(b => b.ShiftId == s.Id) / totalRooms) * 100)
+                        TotalCapacity = totalCapacity,
+                        OccupiedPlaces = db.Bookings
+                            .Where(b => b.ShiftId == s.Id)
+                            .Sum(b => (int?)b.GuestCount) ?? 0,
+                        FreePlaces = totalCapacity - (db.Bookings
+                            .Where(b => b.ShiftId == s.Id)
+                            .Sum(b => (int?)b.GuestCount) ?? 0),
+                        Percent = totalCapacity > 0
+                            ? (int)(((double)(db.Bookings
+                                .Where(b => b.ShiftId == s.Id)
+                                .Sum(b => (int?)b.GuestCount) ?? 0) / totalCapacity) * 100)
                             : 0
                     })
                     .ToList();
 
-                dgLoad.ItemsSource = data;
+                dgLoad.ItemsSource = data.Select(d => new
+                {
+                    d.ShiftName,
+                    Total = d.TotalCapacity,
+                    Booked = d.OccupiedPlaces,
+                    Free = d.FreePlaces,
+                    Percent = d.Percent
+                }).ToList();
             }
         }
 
@@ -97,5 +122,92 @@ namespace Strela_Sanatorii.Pages
                 dgVisits.ItemsSource = data;
             }
         }
+
+        private void ReportShift_Changed(object sender, SelectionChangedEventArgs e)
+        {
+            if (cmbReportShift.SelectedItem == null) return;
+
+            var shiftId = (int)cmbReportShift.SelectedValue;
+
+            using (var db = new ApplicationContext())
+            {
+                var rooms = db.Rooms
+                    .Include(r => r.RoomCategory)
+                    .OrderBy(r => r.RoomNumber)
+                    .ToList();
+
+                var bookings = db.Bookings
+                    .Where(b => b.ShiftId == shiftId)
+                    .Include(b => b.Guest)
+                    .Include(b => b.ServicePackage)
+                    .ToList();
+
+                var reportData = new List<ShiftReportItem> ();
+
+                foreach (var room in rooms)
+                {
+                    var roomBookings = bookings.Where(b => b.RoomId == room.Id).ToList();
+                    var occupied = roomBookings.Sum(b => b.GuestCount);
+
+                    reportData.Add(new ShiftReportItem
+                    {
+                        RoomNumber = room.RoomNumber,
+                        Category = room.RoomCategory?.Name ?? "Без категории",
+                        Capacity = room.Capacity,
+                        Occupied = occupied,
+                        GuestNames = roomBookings.Any()
+                            ? string.Join(", ", roomBookings.Select(b => b.Guest.FullName))
+                            : "—",
+                        PackageName = roomBookings.FirstOrDefault()?.ServicePackage?.Name ?? "—"
+                    });
+                }
+
+                dgShiftReport.ItemsSource = reportData;
+            }
+        }
+
+        private void ExportCsv_Click(object sender, RoutedEventArgs e)
+        {
+            if (dgShiftReport.ItemsSource == null)
+            {
+                MessageBox.Show("Сначала выберите смену для формирования отчёта.");
+                return;
+            }
+
+            var dialog = new Microsoft.Win32.SaveFileDialog
+            {
+                Filter = "CSV files (*.csv)|*.csv",
+                FileName = $"Отчет_по_смене_{DateTime.Now:yyyyMMdd}.csv"
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                var items = dgShiftReport.ItemsSource as List <ShiftReportItem>;
+                if (items == null) return;
+
+                var lines = new List<string>
+                {
+                    "Номер;Категория;Вместимость;Занято мест;Гости;Пакет услуг"
+                };
+
+                foreach (var item in items)
+                {
+                    lines.Add($"{item.RoomNumber};{item.Category};{item.Capacity};{item.Occupied};{item.GuestNames};{item.PackageName}");
+                }
+
+                File.WriteAllLines(dialog.FileName, lines, Encoding.UTF8);
+                MessageBox.Show("Отчёт экспортирован успешно.");
+            }
+        }
+    }
+
+    public class ShiftReportItem
+    {
+        public string RoomNumber { get; set; }
+        public string Category { get; set; }
+        public int Capacity { get; set; }
+        public int Occupied { get; set; }
+        public string GuestNames { get; set; }
+        public string PackageName { get; set; }
     }
 }

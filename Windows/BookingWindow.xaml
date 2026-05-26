@@ -3,67 +3,82 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="Заселение"
-        Height="500" Width="400"
+        Height="600" Width="550"
         WindowStartupLocation="CenterScreen"
         Background="{DynamicResource MaterialDesignPaper}">
 
     <Grid Margin="20">
-
         <materialDesign:Card Padding="25"
                              materialDesign:ElevationAssist.Elevation="Dp8">
 
             <StackPanel>
 
-                <!-- Заголовок -->
                 <TextBlock Text="Заселение в номер"
                            FontSize="20"
                            FontWeight="Bold"
                            Margin="0,0,0,20"/>
-                
-               
+
                 <!-- Номер -->
                 <TextBlock x:Name="txtRoom"
                            FontSize="14"
                            Margin="0,0,0,15"
-                           
                            Opacity="0.7"/>
 
+                <!-- Поиск гостя -->
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,15">
+                    <TextBox x:Name="txtGuestInfo"
+             Width="300"
+             Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+             materialDesign:HintAssist.Hint="Выбранный гость"
+             IsReadOnly="True"
+             Margin="0,0,10,0"/>
+                    <Button Content="🔍 Найти"
+            Style="{StaticResource MaterialDesignRaisedButton}"
+            Click="SearchGuest_Click"/>
+                </StackPanel>
 
+                <!-- Семья -->
+                <CheckBox x:Name="chkIsFamily"
+                          Content="Заселение с семьёй"
+                          Margin="0,0,0,10"
+                          Checked="chkIsFamily_CheckedChanged"
+                          Unchecked="chkIsFamily_CheckedChanged"/>
 
-                <TextBox x:Name="txtClientSearch"
-         materialDesign:HintAssist.Hint="Поиск клиента (ФИО)"
-         Margin="0,0,0,10"
-         TextChanged="txtClientSearch_TextChanged"/>
+                <TextBox x:Name="txtGuestCount"
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                         materialDesign:HintAssist.Hint="Количество человек"
+                         Text="1"
+                         IsEnabled="False"
+                         Margin="0,0,0,15"/>
 
-                <ComboBox x:Name="cmbClients"
-          Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-          materialDesign:HintAssist.Hint="Выбранный клиент"
-          DisplayMemberPath="FullName"
-          SelectedValuePath="Id"
-          SelectionChanged="cmbClients_SelectionChanged"
-          IsEditable="False" />
-                <!-- лучше отключить IsEditable -->
+                <!-- Пакет услуг -->
+                <ComboBox x:Name="cmbPackage"
+                          Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                          materialDesign:HintAssist.Hint="Пакет услуг (необязательно)"
+                          DisplayMemberPath="Name"
+                          SelectedValuePath="Id"
+                          Margin="0,0,0,15"/>
 
                 <!-- Телефон -->
                 <TextBox x:Name="txtPhone"
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                          materialDesign:HintAssist.Hint="Телефон"
+                         IsReadOnly="True"
                          Margin="0,0,0,15"/>
 
                 <!-- Табельный номер -->
                 <TextBox x:Name="txtTabNumber"
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                          materialDesign:HintAssist.Hint="Табельный номер"
+                         IsReadOnly="True"
                          Margin="0,0,0,25"/>
 
                 <!-- Кнопки -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-
                     <Button Content="Отмена"
                             Margin="0,0,10,0"
                             Style="{StaticResource MaterialDesignFlatButton}"
                             Click="Cancel_Click"/>
-
                     <Button Content="ЗАСЕЛИТЬ"
                             Style="{StaticResource MaterialDesignRaisedButton}"
                             Click="Save_Click"/>

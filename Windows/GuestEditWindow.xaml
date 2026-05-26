@@ -1,0 +1,150 @@
+﻿<Window x:Class="Strela_Sanatorii.Windows.GuestEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="Анкета гостя"
+        Height="600" Width="600"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource MaterialDesignPaper}">
+
+    <Grid Margin="20">
+        <materialDesign:Card Padding="20">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TabControl Grid.Row="0">
+
+                    <!-- ВКЛАДКА 1: Основные данные -->
+                    <TabItem Header="Основные данные">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <StackPanel Margin="10">
+
+                                <TextBox x:Name="txtLastName"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                         materialDesign:HintAssist.Hint="Фамилия *"
+                                         Margin="0,0,0,10"/>
+
+                                <TextBox x:Name="txtFirstName"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                         materialDesign:HintAssist.Hint="Имя *"
+                                         Margin="0,0,0,10"/>
+
+                                <TextBox x:Name="txtMiddleName"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                         materialDesign:HintAssist.Hint="Отчество"
+                                         Margin="0,0,0,10"/>
+
+                                <DatePicker x:Name="dpBirthDate"
+                                            Margin="0,0,0,10"
+                                            materialDesign:HintAssist.Hint="Дата рождения"/>
+
+                                <ComboBox x:Name="cmbGender"
+                                          Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                          materialDesign:HintAssist.Hint="Пол"
+                                          Margin="0,0,0,10">
+                                    <ComboBoxItem Content="Мужской"/>
+                                    <ComboBoxItem Content="Женский"/>
+                                </ComboBox>
+
+                                <TextBox x:Name="txtPhone"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                         materialDesign:HintAssist.Hint="Телефон (+7 (XXX) XXX-XX-XX)"
+                                         Margin="0,0,0,10"/>
+
+                                <TextBox x:Name="txtPersonnelNumber"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                         materialDesign:HintAssist.Hint="Табельный номер * (только цифры)"
+                                         Margin="0,0,0,10"/>
+
+                            </StackPanel>
+                        </ScrollViewer>
+                    </TabItem>
+
+                    <!-- ВКЛАДКА 2: Паспортные данные -->
+                    <TabItem Header="Паспортные данные">
+                        <StackPanel Margin="10">
+
+                            <StackPanel Orientation="Horizontal">
+                                <TextBox x:Name="txtPassportSeries"
+                                         Width="100"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                         materialDesign:HintAssist.Hint="Серия"
+                                         Margin="0,0,10,10"/>
+                                <TextBox x:Name="txtPassportNumber"
+                                         Width="200"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                         materialDesign:HintAssist.Hint="Номер"
+                                         Margin="0,0,0,10"/>
+                            </StackPanel>
+
+                            <TextBox x:Name="txtSnils"
+                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                     materialDesign:HintAssist.Hint="СНИЛС"
+                                     Margin="0,0,0,10"/>
+
+                        </StackPanel>
+                    </TabItem>
+
+                    <!-- ВКЛАДКА 3: Контактное лицо -->
+                    <TabItem Header="Контактное лицо">
+                        <StackPanel Margin="10">
+
+                            <TextBox x:Name="txtEmergencyName"
+                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                     materialDesign:HintAssist.Hint="ФИО контактного лица"
+                                     Margin="0,0,0,10"/>
+
+                            <TextBox x:Name="txtEmergencyPhone"
+                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                     materialDesign:HintAssist.Hint="Телефон контактного лица"
+                                     Margin="0,0,0,10"/>
+
+                        </StackPanel>
+                    </TabItem>
+
+                    <!-- ВКЛАДКА 4: Медицинские данные -->
+                    <TabItem Header="Медицинские данные">
+                        <StackPanel Margin="10">
+
+                            <TextBox x:Name="txtAllergies"
+                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                     materialDesign:HintAssist.Hint="Аллергии"
+                                     Margin="0,0,0,10"
+                                     TextWrapping="Wrap"
+                                     AcceptsReturn="True"
+                                     Height="80"/>
+
+                            <TextBox x:Name="txtContraindications"
+                                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                     materialDesign:HintAssist.Hint="Противопоказания"
+                                     Margin="0,0,0,10"
+                                     TextWrapping="Wrap"
+                                     AcceptsReturn="True"
+                                     Height="80"/>
+
+                        </StackPanel>
+                    </TabItem>
+
+                </TabControl>
+
+                <!-- Кнопки внизу -->
+                <StackPanel Grid.Row="1"
+                            Orientation="Horizontal" 
+                            HorizontalAlignment="Right"
+                            Margin="0,15,0,0">
+                    <Button Content="Отмена"
+                            Margin="0,0,10,0"
+                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Click="Cancel_Click"/>
+                    <Button Content="Сохранить"
+                            Style="{StaticResource MaterialDesignRaisedButton}"
+                            Click="Save_Click"/>
+                </StackPanel>
+
+            </Grid>
+        </materialDesign:Card>
+    </Grid>
+</Window>

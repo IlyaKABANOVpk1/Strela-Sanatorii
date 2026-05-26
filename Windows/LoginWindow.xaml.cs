@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Strela_Sanatorii.Models.UserTables;
+using Strela_Sanatorii.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -64,25 +65,60 @@ namespace Strela_Sanatorii.Windows
         {
             using (var db = new ApplicationContext())
             {
-                return db.Users
-                         .Include(u => u.Role)
-                         .FirstOrDefault(u => u.Login == login && u.PasswordHash == password);
+                var user = db.Users
+                             .Include(u => u.Role)
+                             .FirstOrDefault(u => u.Login == login);
+
+                if (user == null) return null;
+
+                // Проверка 1: пароль в BCrypt-формате ($2a$ или $2b$)
+                if (IsBcryptHash(user.PasswordHash))
+                {
+                    if (PasswordService.VerifyPassword(password, user.PasswordHash))
+                        return user;
+                }
+                // Проверка 2: обратная совместимость — пароль в открытом виде
+                else if (user.PasswordHash == password)
+                {
+                    // Перехешировать в BCrypt
+                    user.PasswordHash = PasswordService.HashPassword(password);
+                    db.SaveChanges();
+                    return user;
+                }
+
+                return null;
             }
+        }
+
+        // Проверяет, является ли строка BCrypt-хешем
+        private bool IsBcryptHash(string hash)
+        {
+            if (string.IsNullOrEmpty(hash)) return false;
+            return hash.StartsWith("$2a$") || hash.StartsWith("$2b$") || hash.StartsWith("$2y$");
         }
 
         private void OpenMainWindowByRole(User user)
         {
-            if (user.Role.Name == "Администратор")
+            switch (user.Role.Name)
             {
-                new AdminMainWindow().Show();
-            }
-            else if (user.Role.Name == "Сотрудник доп. услуг")
-            {
-                new ServicesMainWindow().Show();
-            }
-            else if (user.Role.Name == "Системный администратор")
-            {
-                new SysAdminMainWindow().Show();
+                case "Администратор":
+                    new AdminMainWindow().Show();
+                    break;
+                case "Сотрудник доп. услуг":
+                    new ServicesMainWindow().Show();
+                    break;
+                case "Врач":
+                    new DoctorMainWindow().Show();
+                    break;
+                case "Медработник":
+                    new NurseMainWindow().Show();
+                    break;
+                case "Суперпользователь":
+                    new SuperuserMainWindow().Show();
+                    break;
+                default:
+                    MessageBox.Show("Неизвестная роль пользователя.");
+                    break;
             }
         }
 

@@ -11,14 +11,14 @@ namespace Strela_Sanatorii.Models.Additional_service_tables
     {
         public int Id { get; set; }
 
-        public int ClientId { get; set; }
-        public virtual Client Client { get; set; }
+        public int GuestId { get; set; }
+        public virtual Guest Guest { get; set; }
 
         public int ServiceId { get; set; }
         public virtual AdditionalService Service { get; set; }
 
         public DateTime AppointmentDate { get; set; }
-        public TimeSpan StartTime { get; set; } // Время слота (например, 11:00)
+        public TimeSpan StartTime { get; set; }
 
         public bool IsPaid { get; set; } = false;
     }

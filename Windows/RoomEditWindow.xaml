@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="Номер"
-        Height="350" Width="350"
+        Height="450" Width="450"
         WindowStartupLocation="CenterScreen"
         Background="{DynamicResource MaterialDesignPaper}">
 
@@ -19,10 +19,12 @@
                          materialDesign:HintAssist.Hint="Номер комнаты"
                          Margin="0,0,0,15"/>
 
-                <TextBox x:Name="txtCategory"
-                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                         materialDesign:HintAssist.Hint="Категория (например, Люкс)"
-                         Margin="0,0,0,15"/>
+                <ComboBox x:Name="cmbCategory"
+                          Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                          materialDesign:HintAssist.Hint="Категория"
+                          DisplayMemberPath="Name"
+                          SelectedValuePath="Id"
+                          Margin="0,0,0,15"/>
 
                 <TextBox x:Name="txtCapacity"
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}"

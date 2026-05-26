@@ -18,7 +18,15 @@
 
             <Button Content="Добавить пользователя"
                     Style="{StaticResource MaterialDesignRaisedButton}"
-                    Click="AddUser_Click"/>
+                    Click="AddUser_Click"
+                    Margin="0,0,20,0"/>
+
+            <!-- Пагинация -->
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <Button Content="◀" Width="30" Click="PrevPage_Click" x:Name="btnPrev"/>
+                <TextBlock x:Name="txtPageInfo" Text="1 / 1" Margin="10,0" VerticalAlignment="Center"/>
+                <Button Content="▶" Width="30" Click="NextPage_Click" x:Name="btnNext"/>
+            </StackPanel>
         </StackPanel>
 
         <!-- Таблица -->

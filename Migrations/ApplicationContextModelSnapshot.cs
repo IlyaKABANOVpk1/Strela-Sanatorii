@@ -30,30 +30,47 @@ namespace Strela_Sanatorii.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ClientId")
-                        .HasColumnType("integer");
+                    b.Property<DateTime?>("CheckOutDate")
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("GuestCount")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("GuestId")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsFamily")
+                        .HasColumnType("boolean");
 
                     b.Property<int>("RoomId")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("ServicePackageId")
                         .HasColumnType("integer");
 
                     b.Property<int>("ShiftId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientId");
+                    b.HasIndex("GuestId");
 
                     b.HasIndex("RoomId");
+
+                    b.HasIndex("ServicePackageId");
 
                     b.HasIndex("ShiftId");
 
                     b.ToTable("Bookings");
                 });
 
-            modelBuilder.Entity("Strela_Sanatorii.Models.Accommodation_tables.Client", b =>
+            modelBuilder.Entity("Strela_Sanatorii.Models.Accommodation_tables.Guest", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -61,24 +78,81 @@ namespace Strela_Sanatorii.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("FullName")
+                    b.Property<string>("Allergies")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("allergies");
+
+                    b.Property<DateTime?>("BirthDate")
+                        .HasColumnType("timestamp without time zone")
+                        .HasColumnName("birth_date");
+
+                    b.Property<string>("Contraindications")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("contraindications");
+
+                    b.Property<string>("EmergencyContactName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("emergency_contact_name");
+
+                    b.Property<string>("EmergencyContactPhone")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("emergency_contact_phone");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("first_name");
+
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("gender");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("last_name");
+
+                    b.Property<string>("MiddleName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("middle_name");
+
+                    b.Property<string>("PassportNumber")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("passport_number");
+
+                    b.Property<string>("PassportSeries")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("passport_series");
 
                     b.Property<string>("PersonnelNumber")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("personnel_number");
 
                     b.Property<string>("Phone")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("phone");
+
+                    b.Property<string>("Snils")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("snils");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PersonnelNumber")
                         .IsUnique();
 
-                    b.ToTable("Clients");
+                    b.ToTable("Guests");
                 });
 
             modelBuilder.Entity("Strela_Sanatorii.Models.Accommodation_tables.Room", b =>
@@ -92,9 +166,8 @@ namespace Strela_Sanatorii.Migrations
                     b.Property<int>("Capacity")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("RoomCategoryId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("RoomNumber")
                         .IsRequired()
@@ -102,7 +175,33 @@ namespace Strela_Sanatorii.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("RoomCategoryId");
+
                     b.ToTable("Rooms");
+                });
+
+            modelBuilder.Entity("Strela_Sanatorii.Models.Accommodation_tables.RoomCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("BasePrice")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("RoomCategories");
                 });
 
             modelBuilder.Entity("Strela_Sanatorii.Models.Accommodation_tables.Shift", b =>
@@ -114,14 +213,14 @@ namespace Strela_Sanatorii.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("EndDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("StartDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -154,6 +253,106 @@ namespace Strela_Sanatorii.Migrations
                     b.ToTable("AdditionalServices");
                 });
 
+            modelBuilder.Entity("Strela_Sanatorii.Models.Additional_service_tables.BookingAddon", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("AdditionalServiceId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("BookingId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdditionalServiceId");
+
+                    b.ToTable("BookingAddons");
+                });
+
+            modelBuilder.Entity("Strela_Sanatorii.Models.Additional_service_tables.GuestServiceSchedule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("BookingId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("ConfirmedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int?>("ConfirmedByUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("GuestId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Notes")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("ScheduledDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<TimeSpan>("ScheduledTime")
+                        .HasColumnType("interval");
+
+                    b.Property<int>("ServiceId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookingId");
+
+                    b.HasIndex("GuestId");
+
+                    b.HasIndex("ServiceId");
+
+                    b.ToTable("GuestServiceSchedules");
+                });
+
+            modelBuilder.Entity("Strela_Sanatorii.Models.Additional_service_tables.PackageItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AdditionalServiceId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ServicePackageId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AdditionalServiceId");
+
+                    b.HasIndex("ServicePackageId");
+
+                    b.ToTable("PackageItems");
+                });
+
             modelBuilder.Entity("Strela_Sanatorii.Models.Additional_service_tables.ServiceAppointment", b =>
                 {
                     b.Property<int>("Id")
@@ -163,9 +362,9 @@ namespace Strela_Sanatorii.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AppointmentDate")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
-                    b.Property<int>("ClientId")
+                    b.Property<int>("GuestId")
                         .HasColumnType("integer");
 
                     b.Property<bool>("IsPaid")
@@ -179,11 +378,88 @@ namespace Strela_Sanatorii.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientId");
+                    b.HasIndex("GuestId");
 
                     b.HasIndex("ServiceId");
 
                     b.ToTable("ServiceAppointments");
+                });
+
+            modelBuilder.Entity("Strela_Sanatorii.Models.Additional_service_tables.ServicePackage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("TotalPrice")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ServicePackages");
+                });
+
+            modelBuilder.Entity("Strela_Sanatorii.Models.Medical_tables.MedicalPrescription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BookingId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Diagnosis")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("GuestId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Medications")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Procedures")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Recommendations")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookingId");
+
+                    b.HasIndex("DoctorId");
+
+                    b.HasIndex("GuestId");
+
+                    b.ToTable("MedicalPrescriptions");
                 });
 
             modelBuilder.Entity("Strela_Sanatorii.Models.UserTables.Role", b =>
@@ -212,6 +488,21 @@ namespace Strela_Sanatorii.Migrations
                         {
                             Id = 2,
                             Name = "Сотрудник доп. услуг"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Врач"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Медработник"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Суперпользователь"
                         });
                 });
 
@@ -250,9 +541,9 @@ namespace Strela_Sanatorii.Migrations
 
             modelBuilder.Entity("Strela_Sanatorii.Models.Accommodation_tables.Booking", b =>
                 {
-                    b.HasOne("Strela_Sanatorii.Models.Accommodation_tables.Client", "Client")
-                        .WithMany()
-                        .HasForeignKey("ClientId")
+                    b.HasOne("Strela_Sanatorii.Models.Accommodation_tables.Guest", "Guest")
+                        .WithMany("Bookings")
+                        .HasForeignKey("GuestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -262,24 +553,57 @@ namespace Strela_Sanatorii.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Strela_Sanatorii.Models.Additional_service_tables.ServicePackage", "ServicePackage")
+                        .WithMany()
+                        .HasForeignKey("ServicePackageId");
+
                     b.HasOne("Strela_Sanatorii.Models.Accommodation_tables.Shift", "Shift")
                         .WithMany()
                         .HasForeignKey("ShiftId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Client");
+                    b.Navigation("Guest");
 
                     b.Navigation("Room");
+
+                    b.Navigation("ServicePackage");
 
                     b.Navigation("Shift");
                 });
 
-            modelBuilder.Entity("Strela_Sanatorii.Models.Additional_service_tables.ServiceAppointment", b =>
+            modelBuilder.Entity("Strela_Sanatorii.Models.Accommodation_tables.Room", b =>
                 {
-                    b.HasOne("Strela_Sanatorii.Models.Accommodation_tables.Client", "Client")
+                    b.HasOne("Strela_Sanatorii.Models.Accommodation_tables.RoomCategory", "RoomCategory")
+                        .WithMany("Rooms")
+                        .HasForeignKey("RoomCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("RoomCategory");
+                });
+
+            modelBuilder.Entity("Strela_Sanatorii.Models.Additional_service_tables.BookingAddon", b =>
+                {
+                    b.HasOne("Strela_Sanatorii.Models.Additional_service_tables.AdditionalService", "AdditionalService")
                         .WithMany()
-                        .HasForeignKey("ClientId")
+                        .HasForeignKey("AdditionalServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AdditionalService");
+                });
+
+            modelBuilder.Entity("Strela_Sanatorii.Models.Additional_service_tables.GuestServiceSchedule", b =>
+                {
+                    b.HasOne("Strela_Sanatorii.Models.Accommodation_tables.Booking", "Booking")
+                        .WithMany("ServiceSchedules")
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Strela_Sanatorii.Models.Accommodation_tables.Guest", "Guest")
+                        .WithMany()
+                        .HasForeignKey("GuestId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -289,9 +613,76 @@ namespace Strela_Sanatorii.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Client");
+                    b.Navigation("Booking");
+
+                    b.Navigation("Guest");
 
                     b.Navigation("Service");
+                });
+
+            modelBuilder.Entity("Strela_Sanatorii.Models.Additional_service_tables.PackageItem", b =>
+                {
+                    b.HasOne("Strela_Sanatorii.Models.Additional_service_tables.AdditionalService", "AdditionalService")
+                        .WithMany()
+                        .HasForeignKey("AdditionalServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Strela_Sanatorii.Models.Additional_service_tables.ServicePackage", "ServicePackage")
+                        .WithMany("Items")
+                        .HasForeignKey("ServicePackageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AdditionalService");
+
+                    b.Navigation("ServicePackage");
+                });
+
+            modelBuilder.Entity("Strela_Sanatorii.Models.Additional_service_tables.ServiceAppointment", b =>
+                {
+                    b.HasOne("Strela_Sanatorii.Models.Accommodation_tables.Guest", "Guest")
+                        .WithMany()
+                        .HasForeignKey("GuestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Strela_Sanatorii.Models.Additional_service_tables.AdditionalService", "Service")
+                        .WithMany()
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Guest");
+
+                    b.Navigation("Service");
+                });
+
+            modelBuilder.Entity("Strela_Sanatorii.Models.Medical_tables.MedicalPrescription", b =>
+                {
+                    b.HasOne("Strela_Sanatorii.Models.Accommodation_tables.Booking", "Booking")
+                        .WithMany()
+                        .HasForeignKey("BookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Strela_Sanatorii.Models.UserTables.User", "Doctor")
+                        .WithMany()
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Strela_Sanatorii.Models.Accommodation_tables.Guest", "Guest")
+                        .WithMany()
+                        .HasForeignKey("GuestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
+
+                    b.Navigation("Doctor");
+
+                    b.Navigation("Guest");
                 });
 
             modelBuilder.Entity("Strela_Sanatorii.Models.UserTables.User", b =>
@@ -305,9 +696,29 @@ namespace Strela_Sanatorii.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("Strela_Sanatorii.Models.Accommodation_tables.Booking", b =>
+                {
+                    b.Navigation("ServiceSchedules");
+                });
+
+            modelBuilder.Entity("Strela_Sanatorii.Models.Accommodation_tables.Guest", b =>
+                {
+                    b.Navigation("Bookings");
+                });
+
             modelBuilder.Entity("Strela_Sanatorii.Models.Accommodation_tables.Room", b =>
                 {
                     b.Navigation("Bookings");
+                });
+
+            modelBuilder.Entity("Strela_Sanatorii.Models.Accommodation_tables.RoomCategory", b =>
+                {
+                    b.Navigation("Rooms");
+                });
+
+            modelBuilder.Entity("Strela_Sanatorii.Models.Additional_service_tables.ServicePackage", b =>
+                {
+                    b.Navigation("Items");
                 });
 
             modelBuilder.Entity("Strela_Sanatorii.Models.UserTables.Role", b =>

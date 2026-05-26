@@ -1,4 +1,4 @@
-﻿<Page x:Class="Strela_Sanatorii.Pages.ClientsPage"
+﻿<Page x:Class="Strela_Sanatorii.Pages.GuestsPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -8,37 +8,48 @@
 
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,15">
             <TextBox x:Name="txtSearch"
-                     Width="250"
+                     Width="300"
                      Margin="0,0,10,0"
                      Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                     materialDesign:HintAssist.Hint="Поиск (ФИО или табельный)"
+                     materialDesign:HintAssist.Hint="Поиск (Фамилия, Имя, табельный)"
                      TextChanged="Search_TextChanged"/>
 
             <Button Content="Добавить"
                     Style="{StaticResource MaterialDesignRaisedButton}"
-                    Click="AddClient_Click"
+                    Click="AddGuest_Click"
                     Margin="0,0,10,0"/>
 
             <Button Content="Редактировать"
                     Style="{StaticResource MaterialDesignRaisedButton}"
-                    Click="EditClient_Click"
+                    Click="EditGuest_Click"
                     Margin="0,0,10,0"/>
 
             <Button Content="Удалить"
                     Style="{StaticResource MaterialDesignRaisedButton}"
-                    Click="DeleteClient_Click"/>
+                    Click="DeleteGuest_Click"
+                    Margin="0,0,20,0"/>
+
+            <!-- Пагинация -->
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <Button Content="◀" Width="30" Click="PrevPage_Click" x:Name="btnPrev"/>
+                <TextBlock x:Name="txtPageInfo" Text="1 / 1" Margin="10,0" VerticalAlignment="Center"/>
+                <Button Content="▶" Width="30" Click="NextPage_Click" x:Name="btnNext"/>
+            </StackPanel>
         </StackPanel>
 
-        <DataGrid x:Name="ClientsGrid"
+        <DataGrid x:Name="GuestsGrid"
                   AutoGenerateColumns="False"
                   IsReadOnly="True"
                   CanUserAddRows="False"
                   Style="{StaticResource MaterialDesignDataGrid}">
 
             <DataGrid.Columns>
-                <DataGridTextColumn Header="ФИО" Binding="{Binding FullName}" Width="*"/>
+                <DataGridTextColumn Header="Фамилия" Binding="{Binding LastName}" Width="150"/>
+                <DataGridTextColumn Header="Имя" Binding="{Binding FirstName}" Width="120"/>
+                <DataGridTextColumn Header="Отчество" Binding="{Binding MiddleName}" Width="150"/>
                 <DataGridTextColumn Header="Телефон" Binding="{Binding Phone}" Width="150"/>
-                <DataGridTextColumn Header="Табельный №" Binding="{Binding PersonnelNumber}" Width="150"/>
+                <DataGridTextColumn Header="Табельный №" Binding="{Binding PersonnelNumber}" Width="120"/>
+                <DataGridTextColumn Header="Дата рождения" Binding="{Binding BirthDate, StringFormat=d}" Width="120"/>
             </DataGrid.Columns>
 
         </DataGrid>

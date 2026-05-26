@@ -1,0 +1,59 @@
+﻿<Page x:Class="Strela_Sanatorii.Pages.GuestServiceSchedulePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      Background="{DynamicResource MaterialDesignPaper}">
+
+    <DockPanel Margin="20">
+
+        <!-- Верхняя панель -->
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,15">
+            <ComboBox x:Name="cmbGuest"
+                      Width="250"
+                      Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                      materialDesign:HintAssist.Hint="Выберите гостя"
+                      DisplayMemberPath="FullName"
+                      SelectedValuePath="Id"
+                      SelectionChanged="Guest_Changed"
+                      Margin="0,0,20,0"/>
+
+            <ComboBox x:Name="cmbShift"
+                      Width="200"
+                      Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                      materialDesign:HintAssist.Hint="Смена"
+                      DisplayMemberPath="Name"
+                      SelectedValuePath="Id"
+                      SelectionChanged="Shift_Changed"/>
+        </StackPanel>
+
+        <!-- График -->
+        <DataGrid x:Name="ScheduleGrid"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True"
+                  CanUserAddRows="False">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Услуга" Binding="{Binding Service.Name}" Width="*"/>
+                <DataGridTextColumn Header="Дата" Binding="{Binding ScheduledDate, StringFormat=d}" Width="100"/>
+                <DataGridTextColumn Header="Время" Binding="{Binding ScheduledTime}" Width="80"/>
+                <DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="120"/>
+                <DataGridTextColumn Header="Примечания" Binding="{Binding Notes}" Width="150"/>
+                <DataGridTemplateColumn Header="Действия" Width="200">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="Подтвердить"
+                                        Style="{StaticResource MaterialDesignFlatButton}"
+                                        Click="Confirm_Click"/>
+                                <Button Content="Выполнено"
+                                        Style="{StaticResource MaterialDesignFlatButton}"
+                                        Click="Complete_Click"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+    </DockPanel>
+</Page>

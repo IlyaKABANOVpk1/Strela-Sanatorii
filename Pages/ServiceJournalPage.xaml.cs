@@ -36,7 +36,7 @@ namespace Strela_Sanatorii.Pages
         {
             using (var db = new ApplicationContext())
             {
-                cmbFilterClient.ItemsSource = db.Clients.OrderBy(c => c.FullName).ToList();
+                cmbFilterClient.ItemsSource = db.Guests.OrderBy(c => c.FullName).ToList();
                 cmbFilterService.ItemsSource = db.AdditionalServices.OrderBy(s => s.Name).ToList();
             }
         }
@@ -46,7 +46,7 @@ namespace Strela_Sanatorii.Pages
             using (var db = new ApplicationContext())
             {
                 _appointments = db.ServiceAppointments
-                                  .Include(a => a.Client)
+                                  .Include(a => a.Guest)
                                   .Include(a => a.Service)
                                   .ToList();
                 JournalGrid.ItemsSource = _appointments;
@@ -57,14 +57,17 @@ namespace Strela_Sanatorii.Pages
         {
             var filtered = _appointments.AsEnumerable();
 
-            if (cmbFilterClient.SelectedItem is Client client)
-                filtered = filtered.Where(a => a.ClientId == client.Id);
+            if (cmbFilterClient.SelectedItem is Guest client)
+                filtered = filtered.Where(a => a.GuestId == client.Id);
 
             if (cmbFilterService.SelectedItem is AdditionalService service)
                 filtered = filtered.Where(a => a.ServiceId == service.Id);
 
             if (dpFilterDate.SelectedDate != null)
                 filtered = filtered.Where(a => a.AppointmentDate.Date == dpFilterDate.SelectedDate.Value.Date);
+
+            if (chkOnlyPaid.IsChecked == true)
+                filtered = filtered.Where(a => a.IsPaid);
 
             JournalGrid.ItemsSource = filtered.ToList();
         }

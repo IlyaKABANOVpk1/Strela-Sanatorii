@@ -28,7 +28,7 @@
 
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Номер" Binding="{Binding RoomNumber}" Width="*"/>
-                <DataGridTextColumn Header="Категория" Binding="{Binding Category}" Width="*"/>
+                <DataGridTextColumn Header="Категория" Binding="{Binding RoomCategory.Name}" Width="*"/>
                 <DataGridTextColumn Header="Вместимость" Binding="{Binding Capacity}" Width="150"/>
             </DataGrid.Columns>
         </DataGrid>

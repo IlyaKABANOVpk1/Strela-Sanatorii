@@ -1,4 +1,5 @@
 ﻿using Strela_Sanatorii.Models.UserTables;
+using Strela_Sanatorii.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,12 +33,45 @@ namespace Strela_Sanatorii.Windows
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
+            // Валидация
+            if (string.IsNullOrWhiteSpace(txtLogin.Text))
+            {
+                MessageBox.Show("Введите логин.");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtFullName.Text))
+            {
+                MessageBox.Show("Введите ФИО пользователя.");
+                return;
+            }
+
+            if (txtPassword.Password.Length < 6)
+            {
+                MessageBox.Show("Пароль должен содержать минимум 6 символов.");
+                return;
+            }
+
+            if (cmbRole.SelectedItem == null)
+            {
+                MessageBox.Show("Выберите роль.");
+                return;
+            }
+
             using (var db = new ApplicationContext())
             {
+                // Проверка уникальности логина
+                if (db.Users.Any(u => u.Login == txtLogin.Text.Trim()))
+                {
+                    MessageBox.Show("Пользователь с таким логином уже существует.");
+                    return;
+                }
+
                 var user = new User
                 {
-                    Login = txtLogin.Text,
-                    PasswordHash = txtPassword.Password,
+                    Login = txtLogin.Text.Trim(),
+                    FullName = txtFullName.Text.Trim(),
+                    PasswordHash = PasswordService.HashPassword(txtPassword.Password),
                     RoleId = (cmbRole.SelectedItem as Role).Id
                 };
 

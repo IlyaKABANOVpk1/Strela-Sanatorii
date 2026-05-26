@@ -1,0 +1,106 @@
+﻿<Window x:Class="Strela_Sanatorii.Windows.PrescriptionEditWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="Назначение лечения"
+        Height="600" Width="550"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource MaterialDesignPaper}">
+
+    <Grid Margin="20">
+        <materialDesign:Card Padding="25" materialDesign:ElevationAssist.Elevation="Dp8">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Заголовок -->
+                <TextBlock x:Name="txtTitle"
+                           Text="Новое назначение"
+                           FontSize="20" FontWeight="Bold"
+                           Margin="0,0,0,15" Grid.Row="0"/>
+
+                <!-- Информация о госте -->
+                <StackPanel Grid.Row="1" Margin="0,0,0,15" Orientation="Horizontal">
+                    <TextBlock x:Name="txtGuestInfo"
+               FontSize="14" Opacity="0.7"
+               VerticalAlignment="Center"
+               Width="350"/>
+                    <Button Content="🔍 Сменить гостя"
+            Style="{StaticResource MaterialDesignFlatButton}"
+            Click="ChangeGuest_Click"
+            Visibility="Collapsed"
+            x:Name="btnChangeGuest"/>
+                </StackPanel>
+
+                <!-- Форма -->
+                <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+
+                        <TextBox x:Name="txtDiagnosis"
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                 materialDesign:HintAssist.Hint="Диагноз *"
+                                 TextWrapping="Wrap"
+                                 AcceptsReturn="True"
+                                 Height="80"
+                                 Margin="0,0,0,15"/>
+
+                        <TextBox x:Name="txtMedications"
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                 materialDesign:HintAssist.Hint="Назначенные лекарства"
+                                 TextWrapping="Wrap"
+                                 AcceptsReturn="True"
+                                 Height="80"
+                                 Margin="0,0,0,15"/>
+
+                        <TextBox x:Name="txtProcedures"
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                 materialDesign:HintAssist.Hint="Назначенные процедуры"
+                                 TextWrapping="Wrap"
+                                 AcceptsReturn="True"
+                                 Height="80"
+                                 Margin="0,0,0,15"/>
+
+                        <TextBox x:Name="txtRecommendations"
+                                 Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                 materialDesign:HintAssist.Hint="Рекомендации"
+                                 TextWrapping="Wrap"
+                                 AcceptsReturn="True"
+                                 Height="60"
+                                 Margin="0,0,0,15"/>
+
+                        <ComboBox x:Name="cmbStatus"
+                                  Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                  materialDesign:HintAssist.Hint="Статус"
+                                  Margin="0,0,0,10"
+                                  Visibility="Collapsed">
+                            <ComboBoxItem Content="Назначено"/>
+                            <ComboBoxItem Content="В процессе"/>
+                            <ComboBoxItem Content="Выполнено"/>
+                            <ComboBoxItem Content="Отменено"/>
+                        </ComboBox>
+
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- Кнопки -->
+                <StackPanel Grid.Row="3"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            Margin="0,15,0,0">
+                    <Button Content="Отмена"
+                            Margin="0,0,10,0"
+                            Style="{StaticResource MaterialDesignFlatButton}"
+                            Click="Cancel_Click"/>
+                    <Button Content="Сохранить"
+                            Style="{StaticResource MaterialDesignRaisedButton}"
+                            Click="Save_Click"/>
+                </StackPanel>
+
+            </Grid>
+        </materialDesign:Card>
+    </Grid>
+</Window>

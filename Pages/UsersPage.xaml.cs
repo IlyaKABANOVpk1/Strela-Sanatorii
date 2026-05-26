@@ -23,6 +23,19 @@ namespace Strela_Sanatorii.Pages
     /// </summary>
     public partial class UsersPage : Page
     {
+        private List<User> _allUsers;
+        private List<User> _filteredUsers;
+        private int _currentPage = 1;
+        private const int PageSize = 50;
+        private int _totalPages = 1;
+
+        private User _currentUser;
+
+        // Новый конструктор с передачей текущего пользователя
+        public UsersPage(User currentUser) : this()
+        {
+            _currentUser = currentUser;
+        }
         public UsersPage()
         {
             InitializeComponent();
@@ -33,24 +46,69 @@ namespace Strela_Sanatorii.Pages
         {
             using (var db = new ApplicationContext())
             {
-                UsersGrid.ItemsSource = db.Users
+                _allUsers = db.Users
                     .Include(u => u.Role)
                     .ToList();
+
+                _filteredUsers = new List<User>(_allUsers);
+                _currentPage = 1;
+                UpdatePagination();
             }
+        }
+
+        private void UpdatePagination()
+        {
+            _totalPages = (int)Math.Ceiling((double)_filteredUsers.Count / PageSize);
+            if (_totalPages < 1) _totalPages = 1;
+            if (_currentPage > _totalPages) _currentPage = _totalPages;
+            if (_currentPage < 1) _currentPage = 1;
+
+            var pageData = _filteredUsers
+                .Skip((_currentPage - 1) * PageSize)
+                .Take(PageSize)
+                .ToList();
+
+            UsersGrid.ItemsSource = pageData;
+            txtPageInfo.Text = $"{_currentPage} / {_totalPages} (всего: {_filteredUsers.Count})";
+
+            btnPrev.IsEnabled = _currentPage > 1;
+            btnNext.IsEnabled = _currentPage < _totalPages;
         }
 
         private void Search_TextChanged(object sender, TextChangedEventArgs e)
         {
             string search = txtSearch.Text.ToLower();
 
-            using (var db = new ApplicationContext())
+            if (string.IsNullOrWhiteSpace(search))
             {
-                var result = db.Users
-                    .Include(u => u.Role)
+                _filteredUsers = new List<User>(_allUsers);
+            }
+            else
+            {
+                _filteredUsers = _allUsers
                     .Where(u => u.Login.ToLower().Contains(search))
                     .ToList();
+            }
 
-                UsersGrid.ItemsSource = result;
+            _currentPage = 1;
+            UpdatePagination();
+        }
+
+        private void PrevPage_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentPage > 1)
+            {
+                _currentPage--;
+                UpdatePagination();
+            }
+        }
+
+        private void NextPage_Click(object sender, RoutedEventArgs e)
+        {
+            if (_currentPage < _totalPages)
+            {
+                _currentPage++;
+                UpdatePagination();
             }
         }
 
@@ -67,7 +125,22 @@ namespace Strela_Sanatorii.Pages
         {
             var user = (sender as Button).DataContext as User;
 
+            if (_currentUser != null && user.Id == _currentUser.Id)
+            {
+                MessageBox.Show("Нельзя удалить самого себя.");
+                return;
+            }
+
             if (user == null) return;
+
+            // Проверка: нельзя удалить самого себя
+            // TODO: заменить на реальную проверку текущего пользователя из сессии
+            // Пока упрощённо — по логину или ID (нужно передать текущего пользователя в конструктор)
+            if (user.Login == "super" || user.Login == "admin")  // Временная заглушка
+            {
+                MessageBox.Show("Нельзя удалить системного пользователя.");
+                return;
+            }
 
             if (MessageBox.Show($"Удалить пользователя {user.Login}?",
                 "Подтверждение",
@@ -75,9 +148,28 @@ namespace Strela_Sanatorii.Pages
             {
                 using (var db = new ApplicationContext())
                 {
+                    // Проверка: есть ли назначения врача
+                    bool hasPrescriptions = db.MedicalPrescriptions.Any(p => p.DoctorId == user.Id);
+                    if (hasPrescriptions)
+                    {
+                        MessageBox.Show("Невозможно удалить пользователя — он назначал лечение гостям.");
+                        return;
+                    }
+
+                    // Проверка: есть ли подтверждённые процедуры медработником
+                    bool hasConfirmedServices = db.GuestServiceSchedules.Any(s => s.ConfirmedByUserId == user.Id);
+                    if (hasConfirmedServices)
+                    {
+                        MessageBox.Show("Невозможно удалить пользователя — он выполнял процедуры.");
+                        return;
+                    }
+
                     var u = db.Users.Find(user.Id);
-                    db.Users.Remove(u);
-                    db.SaveChanges();
+                    if (u != null)
+                    {
+                        db.Users.Remove(u);
+                        db.SaveChanges();
+                    }
                 }
 
                 LoadUsers();

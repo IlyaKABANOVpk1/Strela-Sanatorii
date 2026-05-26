@@ -20,12 +20,34 @@ namespace Strela_Sanatorii.Windows
     public partial class BookingActionsWindow : Window
     {
         public string ActionResult { get; private set; } = "";
+        public int BookingId { get; private set; }
 
-        public BookingActionsWindow(string clientName, string roomNumber)
+        public BookingActionsWindow(string guestName, string roomNumber, int bookingId, string packageName)
         {
             InitializeComponent();
+            txtInfo.Text = $"Номер {roomNumber}\n{guestName}\n{(string.IsNullOrEmpty(packageName) ? "Без пакета" : $"Пакет: {packageName}")}";
+            BookingId = bookingId;
+        }
 
-            txtInfo.Text = $"Номер {roomNumber}\n{clientName}";
+        private void Progress_Click(object sender, RoutedEventArgs e)
+        {
+            ActionResult = "Progress";
+            DialogResult = true;
+            Close();
+        }
+
+        private void Addon_Click(object sender, RoutedEventArgs e)
+        {
+            ActionResult = "Addon";
+            DialogResult = true;
+            Close();
+        }
+
+        private void Rebook_Click(object sender, RoutedEventArgs e)
+        {
+            ActionResult = "Rebook";
+            DialogResult = true;
+            Close();
         }
 
         private void Evict_Click(object sender, RoutedEventArgs e)
@@ -35,9 +57,9 @@ namespace Strela_Sanatorii.Windows
             Close();
         }
 
-        private void Rebook_Click(object sender, RoutedEventArgs e)
+        private void Certificate_Click(object sender, RoutedEventArgs e)
         {
-            ActionResult = "Rebook";
+            ActionResult = "Certificate";
             DialogResult = true;
             Close();
         }

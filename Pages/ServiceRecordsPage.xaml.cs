@@ -35,7 +35,7 @@ namespace Strela_Sanatorii.Pages
         {
             using (var db = new ApplicationContext())
             {
-                cmbClients.ItemsSource = db.Clients.ToList();
+                cmbClients.ItemsSource = db.Guests.ToList();
                 cmbServices.ItemsSource = db.AdditionalServices.ToList();
             }
         }
@@ -96,7 +96,7 @@ namespace Strela_Sanatorii.Pages
                 return;
             }
 
-            var client = cmbClients.SelectedItem as Client;
+            var client = cmbClients.SelectedItem as Guest;
             var service = cmbServices.SelectedItem as AdditionalService;
             var date = dpDate.SelectedDate.Value;
             var time = (TimeSpan)cmbTimeSlots.SelectedItem;
@@ -118,7 +118,7 @@ namespace Strela_Sanatorii.Pages
 
                 var appointment = new ServiceAppointment
                 {
-                    ClientId = client.Id,
+                    GuestId = client.Id,
                     ServiceId = service.Id,
                     AppointmentDate = date,
                     StartTime = time

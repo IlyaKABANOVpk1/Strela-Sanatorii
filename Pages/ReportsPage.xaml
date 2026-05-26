@@ -5,7 +5,7 @@
       Background="{DynamicResource MaterialDesignPaper}">
 
     <Grid Margin="20">
-        <TabControl Style="{StaticResource MaterialDesignTabControl}">
+        <TabControl x:Name="MainTabControl">
 
             <TabItem Header="Загрузка номеров">
                 <DataGrid x:Name="dgLoad"
@@ -14,9 +14,9 @@
                           CanUserAddRows="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Смена" Binding="{Binding ShiftName}" Width="*"/>
-                        <DataGridTextColumn Header="Всего номеров" Binding="{Binding Total}" Width="120"/>
-                        <DataGridTextColumn Header="Занято" Binding="{Binding Booked}" Width="100"/>
-                        <DataGridTextColumn Header="Свободно" Binding="{Binding Free}" Width="100"/>
+                        <DataGridTextColumn Header="Всего мест" Binding="{Binding Total}" Width="120"/>
+                        <DataGridTextColumn Header="Занято мест" Binding="{Binding Booked}" Width="100"/>
+                        <DataGridTextColumn Header="Свободно мест" Binding="{Binding Free}" Width="100"/>
                         <DataGridTextColumn Header="Загрузка %" Binding="{Binding Percent}" Width="100"/>
                     </DataGrid.Columns>
                 </DataGrid>
@@ -47,6 +47,52 @@
                         <DataGridTextColumn Header="Не оплачено" Binding="{Binding NotPaid}" Width="100"/>
                     </DataGrid.Columns>
                 </DataGrid>
+            </TabItem>
+
+            <TabItem Header="Отчёт по смене">
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" 
+                                Orientation="Horizontal" 
+                                Margin="0,0,0,15">
+                        <ComboBox x:Name="cmbReportShift"
+                                  Width="250"
+                                  Style="{StaticResource MaterialDesignFloatingHintComboBox}"
+                                  materialDesign:HintAssist.Hint="Выберите смену"
+                                  DisplayMemberPath="Name"
+                                  SelectedValuePath="Id"
+                                  SelectionChanged="ReportShift_Changed"/>
+                    </StackPanel>
+
+                    <DataGrid x:Name="dgShiftReport"
+                              Grid.Row="1"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              CanUserAddRows="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Номер" Binding="{Binding RoomNumber}" Width="100"/>
+                            <DataGridTextColumn Header="Категория" Binding="{Binding Category}" Width="150"/>
+                            <DataGridTextColumn Header="Вместимость" Binding="{Binding Capacity}" Width="100"/>
+                            <DataGridTextColumn Header="Занято мест" Binding="{Binding Occupied}" Width="100"/>
+                            <DataGridTextColumn Header="Гости" Binding="{Binding GuestNames}" Width="*"/>
+                            <DataGridTextColumn Header="Пакет услуг" Binding="{Binding PackageName}" Width="150"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <StackPanel Grid.Row="2"
+                                Orientation="Horizontal" 
+                                HorizontalAlignment="Right"
+                                Margin="0,10,0,0">
+                        <Button Content="Экспорт в CSV"
+                                Style="{StaticResource MaterialDesignRaisedButton}"
+                                Click="ExportCsv_Click"/>
+                    </StackPanel>
+                </Grid>
             </TabItem>
 
         </TabControl>

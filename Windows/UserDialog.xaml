@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         Title="Пользователь"
-        Height="300" Width="350"
+        Height="400" Width="400"
         WindowStartupLocation="CenterScreen"
         Background="{DynamicResource MaterialDesignPaper}">
 
@@ -14,17 +14,22 @@
 
                 <TextBox x:Name="txtLogin"
                          Style="{StaticResource MaterialDesignFloatingHintTextBox}"
-                         materialDesign:HintAssist.Hint="Логин"
+                         materialDesign:HintAssist.Hint="Логин *"
+                         Margin="0,0,0,10"/>
+
+                <TextBox x:Name="txtFullName"
+                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                         materialDesign:HintAssist.Hint="ФИО пользователя *"
                          Margin="0,0,0,10"/>
 
                 <PasswordBox x:Name="txtPassword"
                              Style="{StaticResource MaterialDesignFloatingHintPasswordBox}"
-                             materialDesign:HintAssist.Hint="Пароль"
+                             materialDesign:HintAssist.Hint="Пароль (мин. 6 символов) *"
                              Margin="0,0,0,10"/>
 
                 <ComboBox x:Name="cmbRole"
                           Style="{StaticResource MaterialDesignFloatingHintComboBox}"
-                          materialDesign:HintAssist.Hint="Роль"
+                          materialDesign:HintAssist.Hint="Роль *"
                           Margin="0,0,0,20"
                           DisplayMemberPath="Name"/>
 
